@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/OpenXML.Templater
+/OpenXML.Templater/bin/Debug/net8.0
+/OpenXML.Templater/obj
+/OpenXML.Templater.Tests/bin/Debug/net8.0
+/OpenXML.Templater.Tests/obj
