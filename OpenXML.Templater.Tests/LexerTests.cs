@@ -218,5 +218,92 @@ namespace OpenXML.Templater.Tests
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
             Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(" word "));
         }
+
+        [Test]
+        public void WhenWhitespaceText()
+        {
+            var template = " hello";
+            bool isIdentifier = true;
+            Assert.DoesNotThrow(() => isIdentifier = IsIdentifier(template));
+
+            Assert.That(isIdentifier, Is.False);
+        }
+
+        [Test]
+        public void WhenEmpty()
+        {
+            var template = "";
+            bool isIdentifier = true;
+            Assert.DoesNotThrow(() => isIdentifier = IsIdentifier(template));
+
+            Assert.That(isIdentifier, Is.False);
+        }
+
+        [TestCase("=")]
+        [TestCase(",")]
+        [TestCase(":")]
+        [TestCase(";")]
+        [TestCase("\"")]
+        [TestCase("'")]
+        [TestCase("~")]
+        [TestCase("!")]
+        [TestCase("$")]
+        [TestCase("%")]
+        [TestCase("&")]
+        [TestCase("*")]
+        [TestCase("(")]
+        [TestCase(")")]
+        [TestCase("[")]
+        [TestCase("]")]
+        [TestCase("|")]
+        [TestCase("-")]
+        [TestCase("+")]
+        [TestCase("?")]
+        [TestCase("`")]
+        [TestCase("№")]
+        public void WhenNonLiteralText(string nonLiteral)
+        {
+            var template = nonLiteral+"hello";
+            bool isIdentifier = true;
+            Assert.DoesNotThrow(() => isIdentifier = IsIdentifier(template));
+
+            Assert.That(isIdentifier, Is.False);
+        }
+
+        [Test]
+        public void WhenLiteralWhiteSpaceLiteral()
+        {
+            var template = "hello world";
+            bool isIdentifier = true;
+            Assert.DoesNotThrow(() => isIdentifier = IsIdentifier(template));
+
+            Assert.That(isIdentifier, Is.False);
+        }
+
+        [Test]
+        public void WhenLiteralDigit()
+        {
+            var template = "hello_world1";
+            bool isIdentifier = true;
+            Assert.DoesNotThrow(() => isIdentifier = IsIdentifier(template));
+
+            Assert.That(isIdentifier, Is.True);
+        }
+
+        private bool IsIdentifier(string source)
+        {
+            if (string.IsNullOrEmpty(source))
+                return false;
+
+            char firstChar = source[0];
+            if (!Lexer._literalSmbs.Contains(firstChar))
+                return false;
+
+            for (var i = 1; i < source.Length - 1; i++)
+                if (!Lexer._digitSmbs.Contains(source[i]) && !Lexer._literalSmbs.Contains(source[i]))
+                    return false;
+
+            return true;
+        }
     }
 }
