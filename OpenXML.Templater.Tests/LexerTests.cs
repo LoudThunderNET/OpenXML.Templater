@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
-using OpenXML.Templater.Lexemes;
+using OpenXML.Templater.Lexing;
+using OpenXML.Templater.Extensions;
 
 namespace OpenXML.Templater.Tests
 {
@@ -34,7 +35,7 @@ namespace OpenXML.Templater.Tests
             var lexemeEnumerator = lexems.GetEnumerator();
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(" "));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(" "));
         }
 
         [TestCase("0")]
@@ -58,7 +59,7 @@ namespace OpenXML.Templater.Tests
             var lexemeEnumerator = lexems.GetEnumerator();
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(template));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(template));
         }
 
         [Test]
@@ -74,7 +75,7 @@ namespace OpenXML.Templater.Tests
             var lexemeEnumerator = lexems.GetEnumerator();
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(template));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(template));
         }
 
         [Test]
@@ -90,7 +91,7 @@ namespace OpenXML.Templater.Tests
             var lexemeEnumerator = lexems.GetEnumerator();
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(template));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(template));
         }
 
         [Test]
@@ -106,7 +107,7 @@ namespace OpenXML.Templater.Tests
             var lexemeEnumerator = lexems.GetEnumerator();
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(template));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(template));
         }
 
         [Test]
@@ -122,7 +123,7 @@ namespace OpenXML.Templater.Tests
             var lexemeEnumerator = lexems.GetEnumerator();
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(template));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(template));
         }
 
         [Test]
@@ -138,7 +139,7 @@ namespace OpenXML.Templater.Tests
             var lexemeEnumerator = lexems.GetEnumerator();
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(template));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(template));
         }
 
         [Test]
@@ -155,13 +156,13 @@ namespace OpenXML.Templater.Tests
             var lexemeEnumerator = lexems.GetEnumerator();
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(OpenTagLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(string.Empty));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo("{{"));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo("{{"));
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(CloseTagLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(string.Empty));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
         }
 
         [Test]
@@ -178,16 +179,16 @@ namespace OpenXML.Templater.Tests
             var lexemeEnumerator = lexems.GetEnumerator();
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo("hello "));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo("hello "));
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(OpenTagLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(string.Empty));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
             lexemeEnumerator.MoveNext();
-            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(" world "));
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(InlineLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(" world "));
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(CloseTagLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(string.Empty));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
         }
 
         [Test]
@@ -204,106 +205,181 @@ namespace OpenXML.Templater.Tests
             var lexemeEnumerator = lexems.GetEnumerator();
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo("hello "));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo("hello "));
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(OpenTagLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(string.Empty));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
             lexemeEnumerator.MoveNext();
-            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(" beautiful "));
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(InlineLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(" beautiful "));
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(CloseTagLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(string.Empty));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
             lexemeEnumerator.MoveNext();
             Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
-            Assert.That(lexemeEnumerator.Current.Content, Is.EqualTo(" word "));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(" word "));
         }
 
         [Test]
-        public void WhenWhitespaceText()
+        public void WhenTextOpenTagWhitespaceSectionTagWhitespaceCloseTagText()
         {
-            var template = " hello";
-            bool isIdentifier = true;
-            Assert.DoesNotThrow(() => isIdentifier = IsIdentifier(template));
+            var template = "{{ #beautiful }}";
+            var lexer = new Lexer();
 
-            Assert.That(isIdentifier, Is.False);
+            ICollection<Lexem>? lexems = null;
+            Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
+
+            Assert.That(lexems, Is.Not.Null);
+            Assert.That(lexems!.Count, Is.EqualTo(3));
+            var lexemeEnumerator = lexems.GetEnumerator();
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(OpenTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(SectionLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo("beautiful"));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(CloseTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
         }
 
         [Test]
-        public void WhenEmpty()
+        public void WhenTextOpenTagSectionTagCloseTagText()
         {
-            var template = "";
-            bool isIdentifier = true;
-            Assert.DoesNotThrow(() => isIdentifier = IsIdentifier(template));
+            var template = "{{#beautiful}}";
+            var lexer = new Lexer();
 
-            Assert.That(isIdentifier, Is.False);
-        }
+            ICollection<Lexem>? lexems = null;
+            Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
 
-        [TestCase("=")]
-        [TestCase(",")]
-        [TestCase(":")]
-        [TestCase(";")]
-        [TestCase("\"")]
-        [TestCase("'")]
-        [TestCase("~")]
-        [TestCase("!")]
-        [TestCase("$")]
-        [TestCase("%")]
-        [TestCase("&")]
-        [TestCase("*")]
-        [TestCase("(")]
-        [TestCase(")")]
-        [TestCase("[")]
-        [TestCase("]")]
-        [TestCase("|")]
-        [TestCase("-")]
-        [TestCase("+")]
-        [TestCase("?")]
-        [TestCase("`")]
-        [TestCase("№")]
-        public void WhenNonLiteralText(string nonLiteral)
-        {
-            var template = nonLiteral+"hello";
-            bool isIdentifier = true;
-            Assert.DoesNotThrow(() => isIdentifier = IsIdentifier(template));
-
-            Assert.That(isIdentifier, Is.False);
+            Assert.That(lexems, Is.Not.Null);
+            Assert.That(lexems!.Count, Is.EqualTo(3));
+            var lexemeEnumerator = lexems.GetEnumerator();
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(OpenTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(SectionLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo("beautiful"));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(CloseTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
         }
 
         [Test]
-        public void WhenLiteralWhiteSpaceLiteral()
+        public void WhenTextOpenTagWhitespaceInvertedSectionTagWhitespaceCloseTagText()
         {
-            var template = "hello world";
-            bool isIdentifier = true;
-            Assert.DoesNotThrow(() => isIdentifier = IsIdentifier(template));
+            var template = "{{ ^beautiful }}";
+            var lexer = new Lexer();
 
-            Assert.That(isIdentifier, Is.False);
+            ICollection<Lexem>? lexems = null;
+            Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
+
+            Assert.That(lexems, Is.Not.Null);
+            Assert.That(lexems!.Count, Is.EqualTo(3));
+            var lexemeEnumerator = lexems.GetEnumerator();
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(OpenTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(InvertedSectionLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo("beautiful"));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(CloseTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
         }
 
         [Test]
-        public void WhenLiteralDigit()
+        public void WhenTextOpenTagWhitespaceHorizSectionTagWhitespaceCloseTagText()
         {
-            var template = "hello_world1";
-            bool isIdentifier = true;
-            Assert.DoesNotThrow(() => isIdentifier = IsIdentifier(template));
+            var template = "{{ >beautiful }}";
+            var lexer = new Lexer();
 
-            Assert.That(isIdentifier, Is.True);
+            ICollection<Lexem>? lexems = null;
+            Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
+
+            Assert.That(lexems, Is.Not.Null);
+            Assert.That(lexems!.Count, Is.EqualTo(3));
+            var lexemeEnumerator = lexems.GetEnumerator();
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(OpenTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(HorizSectionLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo("beautiful"));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(CloseTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
         }
 
-        private bool IsIdentifier(string source)
+        [Test]
+        public void WhenTextOpenTagWhitespaceEndSectionTagWhitespaceCloseTagText()
         {
-            if (string.IsNullOrEmpty(source))
-                return false;
+            var template = "{{ /beautiful }}";
+            var lexer = new Lexer();
 
-            char firstChar = source[0];
-            if (!Lexer._literalSmbs.Contains(firstChar))
-                return false;
+            ICollection<Lexem>? lexems = null;
+            Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
 
-            for (var i = 1; i < source.Length - 1; i++)
-                if (!Lexer._digitSmbs.Contains(source[i]) && !Lexer._literalSmbs.Contains(source[i]))
-                    return false;
+            Assert.That(lexems, Is.Not.Null);
+            Assert.That(lexems!.Count, Is.EqualTo(3));
+            var lexemeEnumerator = lexems.GetEnumerator();
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(OpenTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(EndSectionLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo("beautiful"));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(CloseTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
+        }
 
-            return true;
+        [Test]
+        public void WhenTextOpenTagSectionWhitespaceCloseTagTextWhitespaceOpenTagLiteralCloseTagWhitespaceOpenTagEndSectionCloseTag()
+        {
+            var template = "{{#beautiful }} {{soul}} {{/beautiful}}";
+            var lexer = new Lexer();
+
+            ICollection<Lexem>? lexems = null;
+            Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
+
+            Assert.That(lexems, Is.Not.Null);
+            Assert.That(lexems!.Count, Is.EqualTo(11));
+            var lexemeEnumerator = lexems.GetEnumerator();
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(OpenTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(SectionLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo("beautiful"));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(CloseTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(string.Empty));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(" "));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(OpenTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(""));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(InlineLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo("soul"));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(CloseTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(""));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(TextLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(" "));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(OpenTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(""));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(EndSectionLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo("beautiful"));
+            lexemeEnumerator.MoveNext();
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(CloseTagLexeme)));
+            Assert.That(lexemeEnumerator.Current.Content.ToString(), Is.EqualTo(""));
         }
     }
 }
