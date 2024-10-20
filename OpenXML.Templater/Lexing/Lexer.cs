@@ -1,8 +1,7 @@
 ﻿using OpenXML.Templater.Extensions;
-using OpenXML.Templater.Lexing;
 using OpenXML.Templater.Primitives;
 
-namespace OpenXML.Templater
+namespace OpenXML.Templater.Lexing
 {
     public class Lexer
     {
@@ -10,10 +9,10 @@ namespace OpenXML.Templater
         private static string CloseTag = "}}";
         private static Dictionary<char, Func<StringSpan, Lexem>> MustasheBlocks = new Dictionary<char, Func<StringSpan, Lexem>>
         {
-            ['#'] = (StringSpan content) => new SectionLexeme(content),
-            ['^'] = (StringSpan content) => new InvertedSectionLexeme(content),
-            ['>'] = (StringSpan content) => new HorizSectionLexeme(content),
-            ['/'] = (StringSpan content) => new EndSectionLexeme(content),
+            ['#'] = (content) => new SectionLexeme(content),
+            ['^'] = (content) => new InvertedSectionLexeme(content),
+            ['>'] = (content) => new HorizSectionLexeme(content),
+            ['/'] = (content) => new EndSectionLexeme(content),
         };
 
         public readonly static HashSet<char> _specSmbs = new HashSet<char>
@@ -57,14 +56,14 @@ namespace OpenXML.Templater
                 }
                 if (openTagIndex > 0)
                 {
-                    lexemes.Add(new TextLexeme(templateSpan.Slice(0,openTagIndex-1)));
+                    lexemes.Add(new TextLexeme(templateSpan.Slice(0, openTagIndex - 1)));
                 }
                 index = openTagIndex + OpenTag.Length;
 
                 lexemes.Add(new OpenTagLexeme());
 
                 // lexical analize of inner content instead TextLexeme
-                var mustacheInner = templateSpan.Slice(index, closeTagIndex-1);
+                var mustacheInner = templateSpan.Slice(index, closeTagIndex - 1);
                 var trimmedMustacheInner = mustacheInner.Trim();
                 if (!trimmedMustacheInner.IsEmpty())
                 {
@@ -73,14 +72,18 @@ namespace OpenXML.Templater
                         var mustacheInnerRemains = trimmedMustacheInner.Slice(1);
                         if (IsIdentifier(mustacheInnerRemains))
                         {
-                            lexemes.Add(lexemeFactory(mustacheInnerRemains));
+                            lexemes.Add(lexemeFactory(mustacheInnerRemains.Trim()));
+                        }
+                        else
+                        {
+                            lexemes.Add(new TextLexeme(trimmedMustacheInner));
                         }
                     }
                     else
                     {
                         if (IsIdentifier(trimmedMustacheInner))
                         {
-                            lexemes.Add(new InlineLexeme(mustacheInner));
+                            lexemes.Add(new InlineLexeme(mustacheInner.Trim()));
                         }
                         else
                         {
@@ -99,7 +102,7 @@ namespace OpenXML.Templater
 
             return lexemes;
 
-            bool AreTagsRightArranged(int openTagIndex, int closeTagIndex) => 
+            bool AreTagsRightArranged(int openTagIndex, int closeTagIndex) =>
                 openTagIndex >= 0 && closeTagIndex > 0 && openTagIndex < closeTagIndex;
 
         }

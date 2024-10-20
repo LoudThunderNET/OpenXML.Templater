@@ -25,7 +25,7 @@ namespace OpenXML.Templater.Tests
             Assert.DoesNotThrow(() => span = new StringSpan(string.Empty));
 
             Assert.That(span.IsEmpty(), Is.True);
-            Assert.Catch(()=>span.IsWhitespace(0));
+            Assert.Catch(() => span.IsWhitespace(0));
             Assert.That(span.Length, Is.EqualTo(0));
             Assert.That(span.StartIndex, Is.EqualTo(0));
             Assert.That(span.EndIndex, Is.EqualTo(-1));
@@ -38,7 +38,7 @@ namespace OpenXML.Templater.Tests
             Assert.DoesNotThrow(() => span = new StringSpan(" "));
 
             Assert.That(span.IsEmpty(), Is.False);
-            Assert.DoesNotThrow(()=>span.IsWhitespace(0));
+            Assert.DoesNotThrow(() => span.IsWhitespace(0));
             Assert.That(span.IsWhitespace(0), Is.True);
             Assert.That(span.Length, Is.EqualTo(1));
             Assert.That(span.StartIndex, Is.EqualTo(0));
@@ -66,7 +66,7 @@ namespace OpenXML.Templater.Tests
             Assert.DoesNotThrow(() => span = new StringSpan(string.Empty, 0, 1));
 
             Assert.That(span.IsEmpty(), Is.True);
-            Assert.Catch(()=>span.IsWhitespace(0));
+            Assert.Catch(() => span.IsWhitespace(0));
             Assert.That(span.Length, Is.EqualTo(0));
             Assert.That(span.StartIndex, Is.EqualTo(0));
             Assert.That(span.EndIndex, Is.EqualTo(-1));
@@ -79,7 +79,7 @@ namespace OpenXML.Templater.Tests
             Assert.DoesNotThrow(() => span = new StringSpan(" ", 0, 1));
 
             Assert.That(span.IsEmpty(), Is.False);
-            Assert.DoesNotThrow(()=>span.IsWhitespace(0));
+            Assert.DoesNotThrow(() => span.IsWhitespace(0));
             Assert.That(span.IsWhitespace(0), Is.True);
             Assert.That(span.Length, Is.EqualTo(1));
             Assert.That(span.StartIndex, Is.EqualTo(0));
@@ -93,7 +93,7 @@ namespace OpenXML.Templater.Tests
             Assert.DoesNotThrow(() => span = new StringSpan(" ", 0, 2));
 
             Assert.That(span.IsEmpty(), Is.False);
-            Assert.DoesNotThrow(()=>span.IsWhitespace(0));
+            Assert.DoesNotThrow(() => span.IsWhitespace(0));
             Assert.That(span.IsWhitespace(0), Is.True);
             Assert.That(span.Length, Is.EqualTo(1));
             Assert.That(span.StartIndex, Is.EqualTo(0));
@@ -110,7 +110,7 @@ namespace OpenXML.Templater.Tests
             var index = span.IndexOf("he");
 
             Assert.That(span.IsEmpty(), Is.False);
-            Assert.DoesNotThrow(()=>span.IsWhitespace(0));
+            Assert.DoesNotThrow(() => span.IsWhitespace(0));
             Assert.That(span.IsWhitespace(0), Is.True);
             Assert.That(index, Is.EqualTo(1));
             Assert.That(span.Length, Is.EqualTo(7));
@@ -127,7 +127,7 @@ namespace OpenXML.Templater.Tests
             var index = span.IndexOf("he");
 
             Assert.That(span.IsEmpty(), Is.False);
-            Assert.DoesNotThrow(()=>span.IsWhitespace(0));
+            Assert.DoesNotThrow(() => span.IsWhitespace(0));
             Assert.That(span.IsWhitespace(0), Is.False);
             Assert.That(index, Is.EqualTo(0));
             Assert.That(span.Length, Is.EqualTo(4));
@@ -144,7 +144,7 @@ namespace OpenXML.Templater.Tests
             var index = span.IndexOf("he");
 
             Assert.That(span.IsEmpty(), Is.False);
-            Assert.DoesNotThrow(()=>span.IsWhitespace(0));
+            Assert.DoesNotThrow(() => span.IsWhitespace(0));
             Assert.That(span.IsWhitespace(0), Is.False);
             Assert.That(index, Is.EqualTo(-1));
             Assert.That(span.Length, Is.EqualTo(4));
@@ -160,12 +160,58 @@ namespace OpenXML.Templater.Tests
             var equal = span.Equals((StringSpan)"hell");
 
             Assert.That(span.IsEmpty(), Is.False);
-            Assert.DoesNotThrow(()=>span.IsWhitespace(0));
+            Assert.DoesNotThrow(() => span.IsWhitespace(0));
             Assert.That(span.IsWhitespace(0), Is.False);
             Assert.That(equal, Is.True);
             Assert.That(span.Length, Is.EqualTo(4));
             Assert.That(span.StartIndex, Is.EqualTo(1));
             Assert.That(span.EndIndex, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void WhenContentStartWithSpace()
+        {
+            var span = new StringSpan(" hello").Trim();
+
+            Assert.That(span.IsEmpty(), Is.False);
+            Assert.DoesNotThrow(() => span.IsWhitespace(0));
+            Assert.That(span.IsWhitespace(0), Is.False);
+            Assert.That(span.Length, Is.EqualTo(5));
+            Assert.That(span.StartIndex, Is.EqualTo(1));
+            Assert.That(span.EndIndex, Is.EqualTo(5));
+            Assert.That(span.ToString(), Is.EqualTo("hello"));
+        }
+
+        [Test]
+        public void WhenContentStartWithSpaceEndsWithSpace()
+        {
+            var span = new StringSpan(" hello ").Trim();
+
+            Assert.That(span.IsEmpty(), Is.False);
+            Assert.DoesNotThrow(() => span.IsWhitespace(0));
+            Assert.DoesNotThrow(() => span.IsWhitespace(4));
+            Assert.That(span.IsWhitespace(0), Is.False);
+            Assert.That(span.IsWhitespace(4), Is.False);
+            Assert.That(span.Length, Is.EqualTo(5));
+            Assert.That(span.StartIndex, Is.EqualTo(1));
+            Assert.That(span.EndIndex, Is.EqualTo(5));
+            Assert.That(span.ToString(), Is.EqualTo("hello"));
+        }
+
+        [Test]
+        public void WhenContentWithoutSpace()
+        {
+            var span = new StringSpan("hello").Trim();
+
+            Assert.That(span.IsEmpty(), Is.False);
+            Assert.DoesNotThrow(() => span.IsWhitespace(0));
+            Assert.DoesNotThrow(() => span.IsWhitespace(4));
+            Assert.That(span.IsWhitespace(0), Is.False);
+            Assert.That(span.IsWhitespace(4), Is.False);
+            Assert.That(span.Length, Is.EqualTo(5));
+            Assert.That(span.StartIndex, Is.EqualTo(0));
+            Assert.That(span.EndIndex, Is.EqualTo(4));
+            Assert.That(span.ToString(), Is.EqualTo("hello"));
         }
     }
 }
