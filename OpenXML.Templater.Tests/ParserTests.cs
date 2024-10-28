@@ -12,7 +12,7 @@ namespace OpenXML.Templater.Tests
         public void WhenEmpty()
         {
             var template = TemplateSamples.Empty;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -28,7 +28,7 @@ namespace OpenXML.Templater.Tests
         public void WhenWhitespace()
         {
             var template = TemplateSamples.Whitespace;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -55,7 +55,7 @@ namespace OpenXML.Templater.Tests
         [TestCase(TemplateSamples.Ten)]
         public void WhenDigit(string template)
         {
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -74,7 +74,7 @@ namespace OpenXML.Templater.Tests
         public void WhenWhitespaceIdentifierWhitespace()
         {
             var template = TemplateSamples.WhitespaceIdentifierWhitespace;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -93,7 +93,7 @@ namespace OpenXML.Templater.Tests
         public void WhenWhitespaceWroneIdentifierWhitespace()
         {
             var template = TemplateSamples.WhitespaceWroneIdentifierWhitespace;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -112,7 +112,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOpenTag()
         {
             var template = TemplateSamples.OpenTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -131,7 +131,7 @@ namespace OpenXML.Templater.Tests
         public void WhenCloseTag()
         {
             var template = TemplateSamples.CloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -150,7 +150,7 @@ namespace OpenXML.Templater.Tests
         public void WhenCloseTagOpenTag()
         {
             var template = TemplateSamples.CloseTagOpenTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -169,7 +169,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOpenTagOpenTagCloseTag()
         {
             var template = TemplateSamples.OpenTagOpenTagCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -188,7 +188,7 @@ namespace OpenXML.Templater.Tests
         public void WhenTextSpaceOpenTagSpaceInlineSpaceCloseTag()
         {
             var template = TemplateSamples.TextSpaceOpenTagSpaceInlineSpaceCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -211,7 +211,7 @@ namespace OpenXML.Templater.Tests
         public void WhenTextSpaceOpenTagSpaceInlineSpaceCloseTagSpaceTextSpace()
         {
             var template = TemplateSamples.TextSpaceOpenTagSpaceInlineSpaceCloseTagSpaceTextSpace;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -237,7 +237,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOpenTagSectionSpaceCloseTagSpaceOpenTagIdentifierCloseTagSpaceOpenTagEndSectionCloseTag()
         {
             var template = TemplateSamples.OpenTagSectionSpaceCloseTagSpaceOpenTagIdentifierCloseTagSpaceOpenTagEndSectionCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -268,7 +268,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOpenTagTextSpaceCloseTag()
         {
             var template = TemplateSamples.OpenTagTextSpaceCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -292,7 +292,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOpenTagInvertedSectionSpaceCloseTagSpaceOpenTagIdentifierCloseTagSpaceOpenTagEndSectionCloseTag()
         {
             var template = TemplateSamples.OpenTagInvertedSectionSpaceCloseTagSpaceOpenTagIdentifierCloseTagSpaceOpenTagEndSectionCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);
@@ -323,7 +323,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOpenTagHorizSectionSpaceCloseTagSpaceOpenTagIdentifierCloseTagSpaceOpenTagEndSectionCloseTag()
         {
             var template = TemplateSamples.OpenTagHorizSectionSpaceCloseTagSpaceOpenTagIdentifierCloseTagSpaceOpenTagEndSectionCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var parser = new Parser();
             parser.Parse(lexemes);

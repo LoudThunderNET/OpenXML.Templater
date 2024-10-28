@@ -1,11 +1,17 @@
-﻿using OpenXML.Templater.Primitives;
+﻿using OpenXML.Templater.Lexing;
+using OpenXML.Templater.Rederer;
 
 namespace OpenXML.Templater.Parsing.Nodes
 {
     public class InlineNode : SyntaxNode
     {
-        public InlineNode(StringSpan content) : base(content)
+        public InlineNode(InlineLexeme content) : base(content)
         { 
+        }
+
+        public override void Accept(IRenderVisitor renderVisitor)
+        {
+            renderVisitor.Visit(this);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace OpenXML.Templater.Tests
         public void WhenEmptyTemplate()
         {
             var template = TemplateSamples.Empty;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             var lexems = lexer.Analize(template);
 
@@ -25,7 +25,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOneWhitespaceTemplate()
         {
             var template = TemplateSamples.Whitespace;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             var lexems = lexer.Analize(template);
 
@@ -49,7 +49,7 @@ namespace OpenXML.Templater.Tests
         [TestCase(TemplateSamples.Ten)]
         public void WhenOneDigitTemplate(string template)
         {
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             var lexems = lexer.Analize(template);
 
@@ -65,7 +65,7 @@ namespace OpenXML.Templater.Tests
         public void WhenIndetifierTemplate()
         {
             var template = TemplateSamples.WhitespaceIdentifierWhitespace;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             var lexems = lexer.Analize(template);
 
@@ -81,7 +81,7 @@ namespace OpenXML.Templater.Tests
         public void WhenWrongIndetifierTemplate()
         {
             var template = TemplateSamples.WhitespaceWroneIdentifierWhitespace;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             var lexems = lexer.Analize(template);
 
@@ -97,7 +97,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOpenTagOnly()
         {
             var template = TemplateSamples.OpenTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             var lexems = lexer.Analize(template);
 
@@ -113,7 +113,7 @@ namespace OpenXML.Templater.Tests
         public void WhenCloseTagOnly()
         {
             var template = TemplateSamples.CloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             var lexems = lexer.Analize(template);
 
@@ -129,7 +129,7 @@ namespace OpenXML.Templater.Tests
         public void WhenCloseTagOpenTag()
         {
             var template = TemplateSamples.CloseTagOpenTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             var lexems = lexer.Analize(template);
 
@@ -145,7 +145,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOpenTagOpenTagCloseTag()
         {
             var template = TemplateSamples.OpenTagOpenTagCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
@@ -168,7 +168,7 @@ namespace OpenXML.Templater.Tests
         public void WhenTextOpenTagTextCloseTag()
         {
             var template = TemplateSamples.TextSpaceOpenTagSpaceInlineSpaceCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
@@ -194,7 +194,7 @@ namespace OpenXML.Templater.Tests
         public void WhenTextOpenTagTextCloseTagText()
         {
             var template = TemplateSamples.TextSpaceOpenTagSpaceInlineSpaceCloseTagSpaceTextSpace;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
@@ -223,7 +223,7 @@ namespace OpenXML.Templater.Tests
         public void WhenTextOpenTagWhitespaceSectionTagWhitespaceCloseTagText()
         {
             var template = TemplateSamples.OpenTagSpaceSectionSpaceCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
@@ -246,7 +246,7 @@ namespace OpenXML.Templater.Tests
         public void WhenTextOpenTagSectionTagCloseTagText()
         {
             var template = TemplateSamples.OpenTagSectionCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
@@ -269,7 +269,7 @@ namespace OpenXML.Templater.Tests
         public void WhenTextOpenTagWhitespaceInvertedSectionTagWhitespaceCloseTagText()
         {
             var template =TemplateSamples.OpenTagSpaceInvertedSectionSpaceCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
@@ -292,7 +292,7 @@ namespace OpenXML.Templater.Tests
         public void WhenTextOpenTagWhitespaceHorizSectionTagWhitespaceCloseTagText()
         {
             var template = TemplateSamples.OpenTagSpaceHorizSectionSpaceCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
@@ -315,7 +315,7 @@ namespace OpenXML.Templater.Tests
         public void WhenTextOpenTagWhitespaceEndSectionTagWhitespaceCloseTagText()
         {
             var template = TemplateSamples.OpenTagSpaceEndSectionSpaceCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
@@ -338,7 +338,7 @@ namespace OpenXML.Templater.Tests
         public void WhenTextOpenTagSectionWhitespaceCloseTagTextWhitespaceOpenTagLiteralCloseTagWhitespaceOpenTagEndSectionCloseTag()
         {
             var template = TemplateSamples.OpenTagSectionSpaceCloseTagSpaceOpenTagIdentifierCloseTagSpaceOpenTagEndSectionCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
@@ -385,7 +385,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOpenTagDigitsCloseTag()
         {
             var template = TemplateSamples.OpenTagDigitsCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
@@ -408,7 +408,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOpenTagTextSpaceCloseTag()
         {
             var template = TemplateSamples.OpenTagTextSpaceCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
@@ -434,7 +434,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOpenTagSectionCloseTagSpaceOpenTagInlineCloseTag()
         {
             var template = TemplateSamples.OpenTagSectionCloseTagSpaceOpenTagInlineCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));
@@ -469,7 +469,7 @@ namespace OpenXML.Templater.Tests
         public void WhenOpenTagTextCloseTag()
         {
             var template = TemplateSamples.OpenTagTextCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
 
             ICollection<Lexem>? lexems = null;
             Assert.DoesNotThrow(() => lexems = lexer.Analize(template));

@@ -1,18 +1,13 @@
 ﻿using OpenXML.Templater.Lexing;
 using OpenXML.Templater.Parsing.Nodes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenXML.Templater.Parsing
 {
     public class Parser
     {
-        private SyntaxNode _root;
+        private readonly SyntaxNode _root;
+        private readonly Stack<SyntaxNode> _prevNode;
         private SyntaxNode _currentNode;
-        private Stack<SyntaxNode> _prevNode;
         public Parser() 
         {
             _root = new RootNode();
@@ -30,19 +25,9 @@ namespace OpenXML.Templater.Parsing
             }
         }
 
-        public void Visit(OpenTagLexeme openTagLexeme)
-        {
-
-        }
-
-        public void Visit(CloseTagLexeme closeTagLexeme)
-        { 
-
-        }
-
         public void Visit(EmptyContent  emptyContent)
         {
-            _currentNode.Children.Add(new TextNode(string.Empty));
+            _currentNode.Children.Add(new TextNode(emptyContent));
         }
 
         public void Visit(EndSectionLexeme endSectionLexeme)
@@ -53,20 +38,20 @@ namespace OpenXML.Templater.Parsing
         public void Visit(HorizSectionLexeme horizSectionLexeme)
         {
             _prevNode.Push(_currentNode);
-            var horizSectionNode = new HorizSectionNode(horizSectionLexeme.Content);
+            var horizSectionNode = new HorizSectionNode(horizSectionLexeme);
             _currentNode.Children.Add(horizSectionNode);
             _currentNode = horizSectionNode;
         }
 
         public void Visit(InlineLexeme inlineLexeme)
         {
-            _currentNode.Children.Add(new InlineNode(inlineLexeme.Content));
+            _currentNode.Children.Add(new InlineNode(inlineLexeme));
         }
         
         public void Visit(InvertedSectionLexeme invertedSectionLexeme)
         {
             _prevNode.Push(_currentNode);
-            var invertedSectionNode = new InvertedSectionNode(invertedSectionLexeme.Content);
+            var invertedSectionNode = new InvertedSectionNode(invertedSectionLexeme);
             _currentNode.Children.Add(invertedSectionNode);
             _currentNode = invertedSectionNode;
         }
@@ -74,14 +59,14 @@ namespace OpenXML.Templater.Parsing
         public void Visit(SectionLexeme sectionLexeme)
         {
             _prevNode.Push(_currentNode);
-            var sectionNode = new SectionNode(sectionLexeme.Content);
+            var sectionNode = new SectionNode(sectionLexeme);
             _currentNode.Children.Add(sectionNode);
             _currentNode = sectionNode;
         }
 
         public void Visit(TextLexeme textLexeme)
         { 
-            _currentNode.Children.Add(new TextNode(textLexeme.Content));
+            _currentNode.Children.Add(new TextNode(textLexeme));
         }
     }
 }

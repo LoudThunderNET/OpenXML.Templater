@@ -146,6 +146,32 @@ namespace OpenXML.Templater.Primitives
             return false;
         }
 
+        public StringSpan[] Split(char delimeter)
+        {
+            var delimeterCount = _source.Count(c => c == delimeter);
+            if (delimeterCount == 0)
+                return Array.Empty<StringSpan>();
+
+            var splitArrayIndex = 0;
+            var spans = new StringSpan[delimeterCount];
+            var mostLeft = StartIndex;
+            while(mostLeft <= EndIndex)
+            {
+                var i = mostLeft;
+                while (_source[i] != delimeter && i < EndIndex)
+                    i++;
+
+                if (i <= EndIndex)
+                {
+                    spans[splitArrayIndex] = Slice(mostLeft - StartIndex, i - StartIndex);
+                    splitArrayIndex++;
+                }
+                mostLeft = i;
+            }
+
+            return spans;
+        }
+
         public static implicit operator StringSpan(string otherString) => new StringSpan(otherString);
         public override int GetHashCode()
         {

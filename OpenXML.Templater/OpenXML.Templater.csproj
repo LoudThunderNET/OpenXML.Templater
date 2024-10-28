@@ -7,8 +7,4 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Rederer\" />
-  </ItemGroup>
-
 </Project>

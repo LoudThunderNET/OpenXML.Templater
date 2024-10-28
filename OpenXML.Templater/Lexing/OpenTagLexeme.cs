@@ -7,7 +7,7 @@ namespace OpenXML.Templater.Lexing
     {
         public override void Accept(Parser parser)
         {
-            parser.Visit(this);
+            //parser.Visit(this);
         }
     }
 }

@@ -1,0 +1,16 @@
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\bin\Debug\net8.0\OpenXML.Xlsx.Templater.deps.json
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\bin\Debug\net8.0\OpenXML.Xlsx.Templater.dll
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\bin\Debug\net8.0\OpenXML.Xlsx.Templater.pdb
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\bin\Debug\net8.0\OpenXML.Templater.dll
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\bin\Debug\net8.0\OpenXML.Templater.pdb
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\obj\Debug\net8.0\OpenXML.Xlsx.Templater.csproj.AssemblyReference.cache
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\obj\Debug\net8.0\OpenXML.Xlsx.Templater.GeneratedMSBuildEditorConfig.editorconfig
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\obj\Debug\net8.0\OpenXML.Xlsx.Templater.AssemblyInfoInputs.cache
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\obj\Debug\net8.0\OpenXML.Xlsx.Templater.AssemblyInfo.cs
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\obj\Debug\net8.0\OpenXML.Xlsx.Templater.csproj.CoreCompileInputs.cache
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\obj\Debug\net8.0\OpenXML.Xlsx.Templater.sourcelink.json
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\obj\Debug\net8.0\OpenXML..6C932308.Up2Date
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\obj\Debug\net8.0\OpenXML.Xlsx.Templater.dll
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\obj\Debug\net8.0\refint\OpenXML.Xlsx.Templater.dll
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\obj\Debug\net8.0\OpenXML.Xlsx.Templater.pdb
+C:\OpenXML.Templater\OpenXML.Xlsx.Templater\obj\Debug\net8.0\ref\OpenXML.Xlsx.Templater.dll

@@ -11,7 +11,7 @@ namespace OpenXML.Templater.Tests
         public void WhenInlineTagContainsDigits()
         {
             var template = "{{435}}";
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var syntax = new Syntax();
             var (isValid, wrongLexem, syntaxError) = syntax.Verify(lexemes);
@@ -25,7 +25,7 @@ namespace OpenXML.Templater.Tests
         public void WhenInlineTagcontainsLiteralAndNotClosedSection()
         {
             var template = TemplateSamples.OpenTagTextSpaceCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var syntax = new Syntax();
             var(isValid, wrongLexem, syntaxError) = syntax.Verify(lexemes);
@@ -39,7 +39,7 @@ namespace OpenXML.Templater.Tests
         public void WhenSectionNotClosed()
         {
             var template = TemplateSamples.OpenTagSectionCloseTagSpaceOpenTagInlineCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var syntax = new Syntax();
             var(isValid, wrongLexem, syntaxError) = syntax.Verify(lexemes);
@@ -53,7 +53,7 @@ namespace OpenXML.Templater.Tests
         public void WhenSectionContainsAdditionaLiteralAndNotClosed()
         {
             var template = TemplateSamples.OpenTagTextCloseTag;
-            var lexer = new Lexer();
+            var lexer = new Lexer(new DefaultLexemeFactory());
             var lexemes = lexer.Analize(template);
             var syntax = new Syntax();
             var(isValid, wrongLexem, syntaxError) = syntax.Verify(lexemes);

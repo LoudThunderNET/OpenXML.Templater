@@ -1,28 +1,31 @@
-﻿using OpenXML.Templater.Primitives;
+﻿using OpenXML.Templater.Lexing;
+using OpenXML.Templater.Rederer;
 
 namespace OpenXML.Templater.Parsing.Nodes
 {
     public abstract class SyntaxNode
     {
-        public StringSpan Content { get; set; }
+        public Lexem? Lexem { get; set; }
         protected SyntaxNode() : this(new List<SyntaxNode>()) 
         { 
         }
 
-        protected SyntaxNode(StringSpan content) : this(content, new List<SyntaxNode>())
+        protected SyntaxNode(Lexem lexem) : this(lexem, new List<SyntaxNode>())
         { 
         }
 
-        protected SyntaxNode(ICollection<SyntaxNode> children):this(StringSpan.Empty(), children)
+        protected SyntaxNode(ICollection<SyntaxNode> children):this(null, children)
         {
         }
 
-        protected SyntaxNode(StringSpan content, ICollection<SyntaxNode> children)
+        protected SyntaxNode(Lexem? lexem, ICollection<SyntaxNode> children)
         {
             Children = children;
-            Content = content;
+            Lexem = lexem;
         }
 
         public ICollection<SyntaxNode> Children { get; }
+
+        public abstract void Accept(IRenderVisitor renderVisitor);
     }
 }
