@@ -8,3 +8,8 @@
 /OpenXML.Templater.Tests/bin/Debug/net8.0
 /OpenXML.Templater.Tests/obj
 /.vs
+/Experiments/NPOI.Experiments/bin/Debug/net8.0
+/Experiments/NPOI.Experiments/obj
+/OpenXML.Xlsx.Templater/bin/Debug/net8.0
+/OpenXML.Xlsx.Templater/obj
+/OpenXML.Xlsx.Templater.Tests/bin/Debug/net8.0/runtimes/win/lib/net8.0

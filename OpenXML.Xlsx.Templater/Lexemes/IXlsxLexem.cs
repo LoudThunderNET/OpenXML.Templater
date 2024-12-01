@@ -1,9 +1,9 @@
-﻿using ClosedXML.Excel;
+﻿using NPOI.SS.UserModel;
 
 namespace OpenXML.Xlsx.Templater.Lexemes
 {
     internal interface IXlsxLexem
     {
-        IXLCell Cell { get; set; }
+        ICell? Cell { get; set; }
     }
 }

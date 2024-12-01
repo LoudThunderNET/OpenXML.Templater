@@ -1,12 +1,17 @@
-﻿using ClosedXML.Excel;
+﻿using NPOI.SS.UserModel;
+using OpenXML.Templater.Lexing;
 using OpenXML.Templater.Primitives;
-using OpenXML.Xlsx.Templater.Lexemes;
 
-namespace OpenXML.Templater.Lexing
+namespace OpenXML.Xlsx.Templater.Lexemes
 {
-    public record XlsxSectionLexeme(StringSpan content) : 
-        SectionLexeme(content), IXlsxLexem
+    public record XlsxSectionLexeme : 
+        SectionLexeme, IXlsxLexem
     {
-        public IXLCell Cell { get; set; }
+        public XlsxSectionLexeme(StringSpan content) : 
+            base(content)
+        { 
+        }
+
+        public ICell? Cell { get; set; }
     }
 }

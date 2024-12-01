@@ -14,7 +14,8 @@ namespace OpenXML.Xlsx.Templater
     {
         private int _rowsCount = 0;
         public string Name { get; set; } = string.Empty;
-        private IList<Column> _cells { get; set; } = new List<Column>();
+        private List<Column> _cells = new();
+
         public IReadOnlyCollection<Column> Columns
         {
             get => _cells.ToArray();
@@ -22,7 +23,7 @@ namespace OpenXML.Xlsx.Templater
             {
                 ArgumentNullException.ThrowIfNull(value);
 
-                _cells = value.ToList();
+                _cells = [.. value];
                 _rowsCount = _cells.FirstOrDefault()?.Rows.Count ?? 0;
             }
         }

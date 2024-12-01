@@ -1,27 +1,43 @@
-﻿using ClosedXML.Excel;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using NPOI.SS.UserModel;
+using NPOI.SS.Util;
+using NPOI.XSSF.UserModel;
 using OpenXML.Templater.Lexing;
 using OpenXML.Templater.Parsing.Nodes;
 using OpenXML.Templater.Rederer;
 using OpenXML.Xlsx.Templater.Exceptions;
+using OpenXML.Xlsx.Templater.Lexemes;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OpenXML.Xlsx.Templater.Renderer
 {
     public class XlsxRenderer : IRenderVisitor, IDisposable
     {
         private bool _disposedValue;
-        private FileStream _fileStream;
-        private readonly IXLWorksheet _template;
-        private readonly XLWorkbook _targetWorkbook;
-        private readonly IXLWorksheet _target;
+        private readonly FileStream _fileStream;
+        private readonly ISheet _templateSheet;
+        private readonly XSSFWorkbook _targetWorkbook;
+        private readonly ISheet _targetSheet;
         private readonly DataModel _dataModel;
+        private readonly List<string> _warrnigs;
+        private readonly Stack<SectionNode> _sectionStack;
 
-        public XlsxRenderer(IXLWorksheet tempate, DataModel dataModel, string outputFilename) 
+        /// <summary>
+        /// Смещение строки в целевом листе, относительно исходного листа.
+        /// Показывает насколько ниже в целоевом листе необходимо выводить
+        /// строку из исходного листа, после отрисовки вертикальной секции.
+        /// </summary>
+        private int _rowOffset = 0;
+
+        public XlsxRenderer(ISheet tempate, DataModel dataModel, string outputFilename) 
         {
             _fileStream = new FileStream(outputFilename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            _targetWorkbook = new XLWorkbook();
-            //_targetWork
-            _template = tempate;
+            _targetWorkbook = new XSSFWorkbook();
+            _targetSheet = _targetWorkbook.CreateSheet("Sheet1");
+            _templateSheet = tempate;
             _dataModel = dataModel;
+            _warrnigs = [];
+            _sectionStack = new Stack<SectionNode>();
         }
 
         public void Visit(HorizSectionNode node)
@@ -33,17 +49,10 @@ namespace OpenXML.Xlsx.Templater.Renderer
         {
             ArgumentNullException.ThrowIfNull(node);
 
-            var inline = node.Lexem as XlsxInlineLexeme;
-            if (inline == null)
+            if (!ValidateInlineNode(node, out var inline, out var field))
                 return;
-                //XlsxTemplateException.Throw("Некорректная структура синтаксического дерева. Ожидалась лексема "+typeof(XlsxInlineLexeme).FullName+", но встретилась лексема "+node.Lexem!.GetType().FullName);
 
-            var field = _dataModel.SingleFileds.FirstOrDefault(f => f.Name == inline!.Content.ToString());
-            if (field == null)
-                return;
-            //field.Value;
-            //inline.Cell.Address;
-            //templ
+            RenderCell(inline.Cell!, field.Value);
         }
 
         public void Visit(InvertedSectionNode node)
@@ -57,16 +66,25 @@ namespace OpenXML.Xlsx.Templater.Renderer
             {
                 child.Accept(this);
             }
+            _targetWorkbook.Write(_fileStream, false);
+            _fileStream.Close();
         }
 
         public void Visit(SectionNode node)
         {
-            throw new NotImplementedException();
+            if(!ValidateNode<XlsxSectionLexeme>(node, out var sectionlexem, out var content))
+                return;
+            _sectionStack.Push(node);
+            // RenderSection(node);
+            _sectionStack.Pop();
         }
 
         public void Visit(TextNode node)
         {
-            throw new NotImplementedException();
+            if (!ValidateNode<XlsxTextLexeme>(node, out var textLexem, out var content))
+                return;
+
+            RenderCell(textLexem.Cell!, content);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -87,5 +105,86 @@ namespace OpenXML.Xlsx.Templater.Renderer
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        private bool ValidateNode<TLexeme>(
+            SyntaxNode node,
+            [NotNullWhen(true)] out TLexeme lexem,
+            [NotNullWhen(true)] out string content)
+            where TLexeme : Lexem, IXlsxLexem
+        {
+            content = null!;
+            lexem = null!;
+            if (node.Lexem is not TLexeme _lexem)
+            {
+                _warrnigs.Add($"Expected type of the node.Lexem is {typeof(TLexeme)} but meet {node.Lexem?.GetType().Name}");
+                return false;
+            }
+
+            content = _lexem.Content.ToString();
+            if (_lexem.Cell == null)
+            {
+                _warrnigs.Add($"Cell property of inlineNode with value {content} is null");
+                content = null!;
+                return false;
+            }
+
+            lexem = _lexem;
+            return true;
+        }
+
+        private bool ValidateInlineNode(
+            InlineNode node,
+            [MaybeNullWhen(false)] out XlsxInlineLexeme lexem,
+            [MaybeNullWhen(false)] out Field field)
+        {
+            field = null;
+            if (!ValidateNode(node, out lexem, out var content))
+            {
+                return false;
+            }
+
+
+            field = _dataModel.SingleFileds.FirstOrDefault(f => f.Name == content);
+            if (field == null)
+            {
+                _warrnigs.Add($"DataModel does not contains field of name '{content}' and will be skiped to render");
+                return false;
+            }
+
+            return true;
+        }
+
+        private void RenderCell(ICell templateCell, string value)
+        {
+            var targetRow = _targetSheet.GetOrAddRow(TargetRowIndex(templateCell.RowIndex));
+            var targetCell = targetRow.GetOrAddCell(templateCell.ColumnIndex);
+
+            if (templateCell.IsMergedCell)
+            {
+                var mergeRange = templateCell.Sheet.MergedRegions
+                    .First(mr => mr.IsInRange(templateCell.RowIndex, templateCell.ColumnIndex));
+
+                var targetMergeRange = new CellRangeAddress(
+                    TargetRowIndex(mergeRange.FirstRow),
+                    TargetRowIndex(mergeRange.LastRow),
+                    mergeRange.FirstColumn,
+                    mergeRange.LastColumn);
+
+                _targetSheet.AddMergedRegion(targetMergeRange);
+            }
+            
+            var targetCellStyle = _targetSheet.Workbook.CreateCellStyle();
+            targetCellStyle.CloneStyleFrom(templateCell.CellStyle);
+            targetCell.CellStyle = targetCellStyle;
+            targetCell.SetCellType(templateCell.CellType);
+            targetCell.SetCellValue(value);
+        }
+
+        /// <summary>
+        /// Возвращает номер строки в целевом листе.
+        /// </summary>
+        /// <param name="templateRowIndex">Индекс строки в исходном листе.</param>
+        private int TargetRowIndex(int templateRowIndex) =>
+            _rowOffset + templateRowIndex;
     }
 }

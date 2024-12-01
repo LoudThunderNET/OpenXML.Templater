@@ -10,5 +10,6 @@ namespace OpenXML.Templater.Rederer
         void Visit(RootNode node);
         void Visit(SectionNode node);
         void Visit(TextNode node);
+        void Visit(EmptyNode node);
     }
 }

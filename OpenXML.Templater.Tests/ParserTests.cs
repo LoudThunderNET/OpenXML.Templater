@@ -19,7 +19,8 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(1));
         }
@@ -35,12 +36,13 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(1));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo(" "));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(" "));
         }
 
         [TestCase(TemplateSamples.One)]
@@ -62,12 +64,13 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(1));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo(template));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(template));
         }
 
         [Test]
@@ -81,12 +84,13 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(1));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo(TemplateSamples.WhitespaceIdentifierWhitespace));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(TemplateSamples.WhitespaceIdentifierWhitespace));
         }
 
         [Test]
@@ -100,12 +104,13 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(1));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo(TemplateSamples.WhitespaceWroneIdentifierWhitespace));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(TemplateSamples.WhitespaceWroneIdentifierWhitespace));
         }
 
         [Test]
@@ -119,12 +124,13 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(1));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo(TemplateSamples.OpenTag));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(TemplateSamples.OpenTag));
         }
 
         [Test]
@@ -138,12 +144,13 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(1));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo(TemplateSamples.CloseTag));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(TemplateSamples.CloseTag));
         }
 
         [Test]
@@ -157,12 +164,13 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(1));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo(TemplateSamples.CloseTagOpenTag));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(TemplateSamples.CloseTagOpenTag));
         }
 
         [Test]
@@ -176,12 +184,13 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(1));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo("{{"));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo("{{"));
         }
 
         [Test]
@@ -195,16 +204,17 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(2));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
             Assert.That(enumerator.Current.GetType(), Is.EqualTo(typeof(TextNode)));
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo("hello "));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo("hello "));
             enumerator.MoveNext();
             Assert.That(enumerator.Current.GetType(), Is.EqualTo(typeof(InlineNode)));
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo("world"));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo("world"));
         }
 
         [Test]
@@ -218,19 +228,20 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(3));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
             Assert.That(enumerator.Current.GetType(), Is.EqualTo(typeof(TextNode)));
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo("hello "));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo("hello "));
             enumerator.MoveNext();
             Assert.That(enumerator.Current.GetType(), Is.EqualTo(typeof(InlineNode)));
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo("beautiful"));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo("beautiful"));
             enumerator.MoveNext();
             Assert.That(enumerator.Current.GetType(), Is.EqualTo(typeof(TextNode)));
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo(" word "));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(" word "));
         }
 
         [Test]
@@ -244,24 +255,25 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(1));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
             Assert.That(enumerator.Current.GetType(), Is.EqualTo(typeof(SectionNode)));
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo("beautiful"));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo("beautiful"));
             Assert.That(enumerator.Current.Children.Count, Is.EqualTo(3));
             var sectionEnumerator = enumerator.Current.Children.GetEnumerator();
             sectionEnumerator.MoveNext();
             Assert.That(sectionEnumerator.Current.GetType(), Is.EqualTo(typeof(TextNode)));
-            Assert.That(sectionEnumerator.Current.Content.ToString(), Is.EqualTo(" "));
+            Assert.That(sectionEnumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(" "));
             sectionEnumerator.MoveNext();
             Assert.That(sectionEnumerator.Current.GetType(), Is.EqualTo(typeof(InlineNode)));
-            Assert.That(sectionEnumerator.Current.Content.ToString(), Is.EqualTo("soul"));
+            Assert.That(sectionEnumerator.Current.Lexem!.Content.ToString(), Is.EqualTo("soul"));
             sectionEnumerator.MoveNext();
             Assert.That(sectionEnumerator.Current.GetType(), Is.EqualTo(typeof(TextNode)));
-            Assert.That(sectionEnumerator.Current.Content.ToString(), Is.EqualTo(" "));
+            Assert.That(sectionEnumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(" "));
         }
 
         [Test]
@@ -275,17 +287,18 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(2));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
             Assert.That(enumerator.Current.GetType(), Is.EqualTo(typeof(TextNode)));
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo("dsfsd132 {{#section"));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo("dsfsd132 {{#section"));
             Assert.That(enumerator.Current.Children.Count, Is.EqualTo(0));
             enumerator.MoveNext();
             Assert.That(enumerator.Current.GetType(), Is.EqualTo(typeof(TextNode)));
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo(" }}"));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(" }}"));
         }
 
         [Test]
@@ -299,24 +312,25 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(1));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
             Assert.That(enumerator.Current.GetType(), Is.EqualTo(typeof(InvertedSectionNode)));
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo("beautiful"));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo("beautiful"));
             Assert.That(enumerator.Current.Children.Count, Is.EqualTo(3));
             var sectionEnumerator = enumerator.Current.Children.GetEnumerator();
             sectionEnumerator.MoveNext();
             Assert.That(sectionEnumerator.Current.GetType(), Is.EqualTo(typeof(TextNode)));
-            Assert.That(sectionEnumerator.Current.Content.ToString(), Is.EqualTo(" "));
+            Assert.That(sectionEnumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(" "));
             sectionEnumerator.MoveNext();
             Assert.That(sectionEnumerator.Current.GetType(), Is.EqualTo(typeof(InlineNode)));
-            Assert.That(sectionEnumerator.Current.Content.ToString(), Is.EqualTo("soul"));
+            Assert.That(sectionEnumerator.Current.Lexem!.Content.ToString(), Is.EqualTo("soul"));
             sectionEnumerator.MoveNext();
             Assert.That(sectionEnumerator.Current.GetType(), Is.EqualTo(typeof(TextNode)));
-            Assert.That(sectionEnumerator.Current.Content.ToString(), Is.EqualTo(" "));
+            Assert.That(sectionEnumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(" "));
         }
 
         [Test]
@@ -330,24 +344,25 @@ namespace OpenXML.Templater.Tests
             var ast = parser.Root;
 
             Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.Content.Length, Is.EqualTo(0));
+            Assert.That(ast.Lexem, Is.Not.Null);
+            Assert.That(ast.Lexem!.Content.Length, Is.EqualTo(0));
             Assert.That(ast.Children, Is.Not.Null);
             Assert.That(ast.Children.Count, Is.EqualTo(1));
             var enumerator = ast.Children.GetEnumerator();
             enumerator.MoveNext();
             Assert.That(enumerator.Current.GetType(), Is.EqualTo(typeof(HorizSectionNode)));
-            Assert.That(enumerator.Current.Content.ToString(), Is.EqualTo("beautiful"));
+            Assert.That(enumerator.Current.Lexem!.Content.ToString(), Is.EqualTo("beautiful"));
             Assert.That(enumerator.Current.Children.Count, Is.EqualTo(3));
             var sectionEnumerator = enumerator.Current.Children.GetEnumerator();
             sectionEnumerator.MoveNext();
             Assert.That(sectionEnumerator.Current.GetType(), Is.EqualTo(typeof(TextNode)));
-            Assert.That(sectionEnumerator.Current.Content.ToString(), Is.EqualTo(" "));
+            Assert.That(sectionEnumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(" "));
             sectionEnumerator.MoveNext();
             Assert.That(sectionEnumerator.Current.GetType(), Is.EqualTo(typeof(InlineNode)));
-            Assert.That(sectionEnumerator.Current.Content.ToString(), Is.EqualTo("soul"));
+            Assert.That(sectionEnumerator.Current.Lexem!.Content.ToString(), Is.EqualTo("soul"));
             sectionEnumerator.MoveNext();
             Assert.That(sectionEnumerator.Current.GetType(), Is.EqualTo(typeof(TextNode)));
-            Assert.That(sectionEnumerator.Current.Content.ToString(), Is.EqualTo(" "));
+            Assert.That(sectionEnumerator.Current.Lexem!.Content.ToString(), Is.EqualTo(" "));
         }
     }
 }

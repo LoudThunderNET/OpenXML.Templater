@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using OpenXML.Templater.Lexing;
 using OpenXML.Templater.Parsing;
 using OpenXML.Templater.Syntaxing;
@@ -11,33 +12,47 @@ namespace OpenXML.Xlsx.Templater
     {
         public void Render(string templateFileName, DataModel dataModel, string outpurFileName)
         {
-            using (var fileStream = new FileStream(templateFileName, FileMode.Open, FileAccess.Read))
-            {
-                var template = new XLWorkbook(fileStream);
-                var worksheet = template.Worksheets.FirstOrDefault();
-                if (worksheet == null)
-                {
-                    XlsxTemplateException.Throw("В файле шаблона нет книги");
-                    return;
-                }
+            using var fileStream = new FileStream(templateFileName, FileMode.Open, FileAccess.Read);
 
-                var lexer = new Lexer(new XlsxLexemeFactory());
-                var lexemes = worksheet.Cells()
-                    .SelectMany(cell => lexer.Analize(cell.Value.ToString()))
-                    .ToList();
-                var syntax = new Syntax();
-                var(isValid, lexem, syntaxError) = syntax.Verify(lexemes);
-                if (!isValid && lexem != null)
-                {
-                    XlsxTemplateException
-                        .Throw("Синтаксическая ошибка в ячейке " + ((IXlsxLexem)lexem).Cell.Address + ": " + syntaxError);
-                }
-                var parser = new Parser();
-                parser.Parse(lexemes);
-                var ast = parser.Root;
-                var renderer = new XlsxRenderer(worksheet, dataModel, outpurFileName);
-                ast.Accept(renderer);
+            var template = new XSSFWorkbook(fileStream);
+            ISheet sheet = template.GetSheetAt(0);
+            if (sheet == null)
+            {
+                XlsxTemplateException.Throw("В файле шаблона нет книги");
+                return;
             }
+
+            var lexer = new Lexer(new XlsxLexemeFactory());
+
+            var wrongLexemsExist = false;
+            List<Lexem> lexemes = sheet
+                .SelectMany(row => row.SelectMany(cell =>
+                {
+                    var lexems = lexer.Analize(cell.StringCellValue);
+                    foreach (var l in lexems)
+                        if (l is IXlsxLexem xlsxLexem)
+                            xlsxLexem.Cell = cell;
+                        else
+                            wrongLexemsExist = true;
+                    return lexems;
+                }))
+                .ToList();
+            if (wrongLexemsExist)
+                XlsxTemplateException
+                    .Throw("Ошибка разбора шаблона: есть лексемы тличные от типа "+typeof(IXlsxLexem).FullName);
+
+            var syntax = new Syntax();
+            var (isValid, lexem, syntaxError) = syntax.Verify(lexemes);
+            if (!isValid && lexem != null)
+            {
+                XlsxTemplateException
+                    .Throw("Синтаксическая ошибка в ячейке " + ((IXlsxLexem)lexem).Cell!.Address + ": " + syntaxError);
+            }
+            var parser = new Parser();
+            parser.Parse(lexemes);
+            var ast = parser.Root;
+            var renderer = new XlsxRenderer(sheet, dataModel, outpurFileName);
+            ast.Accept(renderer);
         }
     }
 }

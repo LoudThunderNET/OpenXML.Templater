@@ -1,5 +1,6 @@
 ﻿using OpenXML.Templater.Lexing;
 using OpenXML.Templater.Primitives;
+using OpenXML.Xlsx.Templater.Lexemes;
 
 namespace OpenXML.Xlsx.Templater
 {

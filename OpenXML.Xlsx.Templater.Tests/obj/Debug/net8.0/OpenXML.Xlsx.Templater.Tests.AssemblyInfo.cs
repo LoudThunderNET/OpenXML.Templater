@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OpenXML.Xlsx.Templater.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c7fd56e60479b79b0590247390fe426b3cbee33b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+971267280a0097aa925a675349cfaf14e1d102c0")]
 [assembly: System.Reflection.AssemblyProductAttribute("OpenXML.Xlsx.Templater.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OpenXML.Xlsx.Templater.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
