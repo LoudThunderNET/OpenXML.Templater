@@ -6,11 +6,12 @@ namespace OpenXML.Xlsx.Templater.Renderer
     {
         internal static IRow GetOrAddRow(this ISheet sheet, int rowIndex)
         {
-            IRow row = sheet.GetRow(rowIndex);
-            if(row == null)
-                row = sheet.CreateRow(rowIndex);
+            IRow row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
 
             return row!;
         }
+
+        internal static bool IsInMergedRegion(this ISheet sheet, ICell cell) =>
+            sheet.MergedRegions.Any(mr => mr.IsInRange(cell.RowIndex, cell.ColumnIndex));
     }
 }

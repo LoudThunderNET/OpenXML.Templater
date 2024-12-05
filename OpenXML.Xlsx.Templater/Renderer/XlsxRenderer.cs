@@ -29,12 +29,12 @@ namespace OpenXML.Xlsx.Templater.Renderer
         /// </summary>
         private int _rowOffset = 0;
 
-        public XlsxRenderer(ISheet tempate, DataModel dataModel, string outputFilename) 
+        public XlsxRenderer(ISheet templateSheet, DataModel dataModel, string outputFilename) 
         {
             _fileStream = new FileStream(outputFilename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             _targetWorkbook = new XSSFWorkbook();
-            _targetSheet = _targetWorkbook.CreateSheet("Sheet1");
-            _templateSheet = tempate;
+            _targetSheet = _targetWorkbook.CreateSheet(templateSheet.SheetName);
+            _templateSheet = templateSheet;
             _dataModel = dataModel;
             _warrnigs = [];
             _sectionStack = new Stack<SectionNode>();
@@ -75,8 +75,13 @@ namespace OpenXML.Xlsx.Templater.Renderer
             if(!ValidateNode<XlsxSectionLexeme>(node, out var sectionlexem, out var content))
                 return;
             _sectionStack.Push(node);
-            // RenderSection(node);
+            RenderSection(sectionlexem, content);
             _sectionStack.Pop();
+        }
+
+        private void RenderSection(XlsxSectionLexeme sectionlexem, string content)
+        {
+            var table = _dataModel.Tables.FirstOrDefault(t => t.Name == content);
         }
 
         public void Visit(TextNode node)
@@ -183,7 +188,7 @@ namespace OpenXML.Xlsx.Templater.Renderer
             var targetCellStyle = _targetSheet.Workbook.CreateCellStyle();
             targetCellStyle.CloneStyleFrom(templateCell.CellStyle);
 
-            if (templateCell.IsMergedCell)
+            if (templateCell.IsMergedCell && !_targetSheet.IsInMergedRegion(targetCell))
             {
                 var mergeRange = templateCell.Sheet.MergedRegions
                     .First(mr => mr.IsInRange(templateCell.RowIndex, templateCell.ColumnIndex));

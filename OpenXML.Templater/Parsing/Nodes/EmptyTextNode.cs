@@ -4,11 +4,8 @@ using OpenXML.Templater.Rederer;
 
 namespace OpenXML.Templater.Parsing.Nodes
 {
-    public class EmptyNode : SyntaxNode
+    public class EmptyNode(Lexem lexem) : SyntaxNode(lexem)
     {
-        public EmptyNode(Lexem lexem) : base(lexem) 
-        { }
-
         public override void Accept(IRenderVisitor renderVisitor)
         {
             renderVisitor.Visit(this);
