@@ -18,7 +18,7 @@ namespace OpenXML.Templater.Tests
             Assert.That(lexems.Count, Is.EqualTo(1));
             var lexemeEnumerator = lexems.GetEnumerator();
             lexemeEnumerator.MoveNext();
-            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(EmptyContent)));
+            Assert.That(lexemeEnumerator.Current.GetType(), Is.EqualTo(typeof(EmptyLexem)));
         }
 
         [Test]

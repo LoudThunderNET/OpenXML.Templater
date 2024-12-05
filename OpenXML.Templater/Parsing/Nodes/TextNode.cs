@@ -1,5 +1,4 @@
 ﻿using OpenXML.Templater.Lexing;
-using OpenXML.Templater.Primitives;
 using OpenXML.Templater.Rederer;
 
 namespace OpenXML.Templater.Parsing.Nodes

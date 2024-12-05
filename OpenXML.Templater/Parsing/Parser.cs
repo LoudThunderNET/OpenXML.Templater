@@ -25,9 +25,9 @@ namespace OpenXML.Templater.Parsing
             }
         }
 
-        public void Visit(EmptyContent  emptyContent)
+        public void Visit(EmptyLexem  emptyLexem)
         {
-            _currentNode.Children.Add(new TextNode(emptyContent));
+            _currentNode.Children.Add(new EmptyNode(emptyLexem));
         }
 
         public void Visit(EndSectionLexeme endSectionLexeme)

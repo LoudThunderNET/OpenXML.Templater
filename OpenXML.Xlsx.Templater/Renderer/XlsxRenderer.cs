@@ -87,6 +87,15 @@ namespace OpenXML.Xlsx.Templater.Renderer
             RenderCell(textLexem.Cell!, content);
         }
 
+        /// <inheritdoc/>
+        public void Visit(EmptyNode node)
+        {
+            if (!ValidateType<XlsxEmptyLexem>(node, out var emptyLexem))
+                return;
+
+            RenderCell(emptyLexem.Cell!, string.Empty);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
@@ -114,17 +123,30 @@ namespace OpenXML.Xlsx.Templater.Renderer
         {
             content = null!;
             lexem = null!;
-            if (node.Lexem is not TLexeme _lexem)
+            if (!ValidateType<TLexeme>(node, out lexem))
             {
-                _warrnigs.Add($"Expected type of the node.Lexem is {typeof(TLexeme)} but meet {node.Lexem?.GetType().Name}");
                 return false;
             }
 
-            content = _lexem.Content.ToString();
-            if (_lexem.Cell == null)
+            content = lexem.Content.ToString();
+            if (lexem.Cell == null)
             {
                 _warrnigs.Add($"Cell property of inlineNode with value {content} is null");
                 content = null!;
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidateType<TLexeme>(SyntaxNode node,
+            [NotNullWhen(true)] out TLexeme lexem)
+             where TLexeme : Lexem, IXlsxLexem
+        {
+            lexem = null!;
+            if (node.Lexem is not TLexeme _lexem)
+            {
+                _warrnigs.Add($"Expected type of the node.Lexem is {typeof(TLexeme)} but meet {node.Lexem?.GetType().Name}");
                 return false;
             }
 
@@ -158,12 +180,22 @@ namespace OpenXML.Xlsx.Templater.Renderer
         {
             var targetRow = _targetSheet.GetOrAddRow(TargetRowIndex(templateCell.RowIndex));
             var targetCell = targetRow.GetOrAddCell(templateCell.ColumnIndex);
+            var targetCellStyle = _targetSheet.Workbook.CreateCellStyle();
+            targetCellStyle.CloneStyleFrom(templateCell.CellStyle);
 
             if (templateCell.IsMergedCell)
             {
                 var mergeRange = templateCell.Sheet.MergedRegions
                     .First(mr => mr.IsInRange(templateCell.RowIndex, templateCell.ColumnIndex));
-
+                for (var rowIndex = mergeRange.FirstRow; rowIndex <= mergeRange.LastRow; rowIndex++)
+                {
+                    var targetMergeRow = _targetSheet.GetOrAddRow(TargetRowIndex(rowIndex));
+                    for (var colIndex = mergeRange.FirstColumn; colIndex <= mergeRange.LastColumn; colIndex++)
+                    {
+                        var cellMergeTarget = targetMergeRow.GetOrAddCell(colIndex);
+                        cellMergeTarget.CellStyle = targetCellStyle;
+                    }
+                }
                 var targetMergeRange = new CellRangeAddress(
                     TargetRowIndex(mergeRange.FirstRow),
                     TargetRowIndex(mergeRange.LastRow),
@@ -171,10 +203,12 @@ namespace OpenXML.Xlsx.Templater.Renderer
                     mergeRange.LastColumn);
 
                 _targetSheet.AddMergedRegion(targetMergeRange);
+                var leftTopeMergeCell = _targetSheet.GetRow(targetMergeRange.FirstRow)
+                    .GetCell(targetMergeRange.FirstColumn);
+                leftTopeMergeCell.SetCellValue(value);
+                return;
             }
             
-            var targetCellStyle = _targetSheet.Workbook.CreateCellStyle();
-            targetCellStyle.CloneStyleFrom(templateCell.CellStyle);
             targetCell.CellStyle = targetCellStyle;
             targetCell.SetCellType(templateCell.CellType);
             targetCell.SetCellValue(value);

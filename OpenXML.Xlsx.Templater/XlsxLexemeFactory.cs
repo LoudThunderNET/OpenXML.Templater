@@ -8,7 +8,7 @@ namespace OpenXML.Xlsx.Templater
     {
         public CloseTagLexeme CreateCloseTagLexeme() => new XlsxCloseTagLexeme();
 
-        public EmptyContent CreateEmptyContent() => new XlsxEmptyContent();
+        public EmptyLexem CreateEmptyLexeme() => new XlsxEmptyLexem();
 
         public EndSectionLexeme CreateEndSectionLexeme(StringSpan content) => 
             new XlsxEndSectionLexeme(content);

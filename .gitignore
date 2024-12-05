@@ -3,13 +3,16 @@
 ################################################################################
 
 /.vs/OpenXML.Templater
-/OpenXML.Templater/bin/Debug/net8.0
+/OpenXML.Templater/bin
 /OpenXML.Templater/obj
-/OpenXML.Templater.Tests/bin/Debug/net8.0
+/OpenXML.Templater.Tests/bin
 /OpenXML.Templater.Tests/obj
 /.vs
-/Experiments/NPOI.Experiments/bin/Debug/net8.0
+/Experiments/NPOI.Experiments/bin
 /Experiments/NPOI.Experiments/obj
-/OpenXML.Xlsx.Templater/bin/Debug/net8.0
+
+/OpenXML.Xlsx.Templater/bin
 /OpenXML.Xlsx.Templater/obj
-/OpenXML.Xlsx.Templater.Tests/bin/Debug/net8.0/runtimes/win/lib/net8.0
+/OpenXML.Xlsx.Templater.Tests/bin/
+/OpenXML.Xlsx.Templater.Tests/obj/
+

@@ -3,7 +3,7 @@ using OpenXML.Templater.Primitives;
 
 namespace OpenXML.Templater.Lexing
 {
-    public record EmptyContent() : Lexem(StringSpan.Empty())
+    public record EmptyLexem() : Lexem(StringSpan.Empty())
     {
         public override void Accept(Parser parser)
         {

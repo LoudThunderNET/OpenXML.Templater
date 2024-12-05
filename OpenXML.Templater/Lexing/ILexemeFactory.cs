@@ -15,7 +15,7 @@ namespace OpenXML.Templater.Lexing
         /// <summary>
         /// Возвращает лексему пустого текста.
         /// </summary>
-        EmptyContent CreateEmptyContent();
+        EmptyLexem CreateEmptyLexeme();
 
         /// <summary>
         /// Возвращает лексему окончания секции "\".

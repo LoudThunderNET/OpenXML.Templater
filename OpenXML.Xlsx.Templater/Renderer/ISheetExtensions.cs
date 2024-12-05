@@ -8,8 +8,7 @@ namespace OpenXML.Xlsx.Templater.Renderer
         {
             IRow row = sheet.GetRow(rowIndex);
             if(row == null)
-                for(var index = sheet.LastRowNum; index <= sheet.LastRowNum; index++)
-                    row = sheet.CreateRow(rowIndex);
+                row = sheet.CreateRow(rowIndex);
 
             return row!;
         }

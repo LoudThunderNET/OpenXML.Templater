@@ -7,7 +7,7 @@ namespace OpenXML.Templater.Lexing
     {
         public CloseTagLexeme CreateCloseTagLexeme() => new();
 
-        public EmptyContent CreateEmptyContent() => new();
+        public EmptyLexem CreateEmptyLexeme() => new();
 
         public EndSectionLexeme CreateEndSectionLexeme(StringSpan content) => 
             new(content);

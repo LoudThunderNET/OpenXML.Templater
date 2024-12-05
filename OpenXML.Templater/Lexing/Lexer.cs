@@ -51,7 +51,7 @@ namespace OpenXML.Templater.Lexing
             var lexemes = new List<Lexem>();
             if (template.IsNullOrEmpty())
             {
-                lexemes.Add(_lexemeFactory.CreateEmptyContent());
+                lexemes.Add(_lexemeFactory.CreateEmptyLexeme());
             }
             var templateSpan = new StringSpan(template);
             int endIndex = template.Length - 1;

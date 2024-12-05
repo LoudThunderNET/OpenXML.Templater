@@ -3,7 +3,7 @@ using OpenXML.Templater.Lexing;
 
 namespace OpenXML.Xlsx.Templater.Lexemes
 {
-    public record XlsxEmptyContent() : EmptyContent(), IXlsxLexem
+    public record XlsxEmptyLexem() : EmptyLexem(), IXlsxLexem
     {
         public ICell? Cell { get; set; }
     }
