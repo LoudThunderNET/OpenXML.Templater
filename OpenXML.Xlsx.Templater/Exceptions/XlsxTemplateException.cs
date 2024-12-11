@@ -1,4 +1,6 @@
-﻿namespace OpenXML.Xlsx.Templater.Exceptions
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace OpenXML.Xlsx.Templater.Exceptions
 {
     [Serializable]
     public class XlsxTemplateException : Exception
@@ -15,6 +17,7 @@
         {
         }
 
+        [DoesNotReturn]
         public static void Throw(string message)
         {
             throw new XlsxTemplateException(message);

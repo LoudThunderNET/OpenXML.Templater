@@ -32,6 +32,10 @@ namespace OpenXML.Templater.Parsing
 
         public void Visit(EndSectionLexeme endSectionLexeme)
         {
+            if (_currentNode is IHasEnd hasEndNode)
+            {
+                hasEndNode.End = endSectionLexeme;
+            }
             _currentNode = _prevNode.Pop();
         }
         

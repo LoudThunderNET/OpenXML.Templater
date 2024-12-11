@@ -8,79 +8,87 @@ namespace OpenXML.Xlsx.Templater
         public IReadOnlyCollection<Table> Tables { get; set; } = [];
     }
 
-    public record Field(string Name, string Value);
+    public record Field
+    {
+        public Field()
+        { 
+            Name = Value = string.Empty;
+        }
+
+        public Field(string name, string value)
+        {
+            Name = name;
+            Value = value;
+        }
+
+        public string Name { get; set; }
+        public string Value { get; set; }
+    }
 
     public class Table
     {
-        private int _rowsCount = 0;
-        public string Name { get; set; } = string.Empty;
-        private List<Column> _cells = new();
+        private List<Row> _rows = [];
 
-        public IReadOnlyCollection<Column> Columns
+        public string Name { get; set; } = string.Empty;
+
+        public List<Row> Rows
         {
-            get => _cells.ToArray();
+            get => _rows;
             set
             {
                 ArgumentNullException.ThrowIfNull(value);
 
-                _cells = [.. value];
-                _rowsCount = _cells.FirstOrDefault()?.Rows.Count ?? 0;
+                _rows = value;
             }
         }
 
-        public string this[string columnName, int rowIndex]
+        public string this[int rowIndex, string columnName]
         {
-            get => GetCellValue(columnName, rowIndex);
-            set => SetCellValue(columnName, rowIndex, value);
+            get => GetCellValue(rowIndex, columnName);
+            set => SetCellValue(rowIndex, columnName, value);
         }
 
-        private string GetCellValue(string columnName, int rowIndex)
+        private string GetCellValue(int rowIndex, string columnName)
         {
-            var column = _cells.FirstOrDefault(k => k.Name == columnName);
-            if (column == null)
-            {
-                XlsxTemplateException.Throw("Столбец "+columnName+" не найден.");
-            }
-            if (rowIndex >= column!.Rows.Count)
-            {
-                XlsxTemplateException.Throw("Индекс " + rowIndex + " выходит за пределы строк");
-            }
+            ValidateRowIndex(rowIndex);
 
-            return column.Rows[rowIndex];
+            var cell = _rows[rowIndex].Cells.FirstOrDefault(f => f.Name == columnName);
+            if (cell == null)
+                XlsxTemplateException
+                    .Throw($"Столбец {columnName} не найден.");
+
+            return cell.Value;
         }
 
-        public void SetCellValue(string columnName, string columnHeader, int rowIndex, string value)
+        private void ValidateRowIndex(int rowIndex)
         {
-            var column = _cells.FirstOrDefault(c => c.Name == columnName);
-            if (column == null)
-            {
-                var rows = Enumerable
-                    .Range(0, _rowsCount)
-                    .Select(r => string.Empty)
-                    .ToList();
-                column = new Column(columnHeader, columnName, rows);
-                _cells.Add(column);
-            }
-
-            if (rowIndex >= _rowsCount)
-            {
-                foreach (var cellColumn in _cells)
-                {
-                    for (var i = _rowsCount; i <= rowIndex; i++)
-                        cellColumn.Rows.Add(string.Empty);
-                }
-                _rowsCount = rowIndex + 1;
-            }
-
-            column.Rows[rowIndex] = value;
+            if (rowIndex < 0 || rowIndex >= _rows.Count)
+                XlsxTemplateException
+                    .Throw($"Индекс {rowIndex} выходит за пределы диапазона [0..{_rows.Count - 1}].");
         }
 
-        private void SetCellValue(string columnName, int rowIndex, string value)
+        public void SetCellValue(int rowIndex, string columnName, string value)
         {
-            SetCellValue(columnName, string.Empty, rowIndex, value);
+            ValidateRowIndex(rowIndex);
+            var cell = _rows[rowIndex].Cells.FirstOrDefault(f => f.Name == columnName);
+            if (cell == null)
+                XlsxTemplateException.Throw($"Столбец {columnName} не найден.");
+
+            cell.Value = value;
         }
     }
 
-    public record Column(string Header, string Name, IList<string> Rows);
+    public record Row
+    {
+        public Row()
+        { 
+            Cells = [];
+        }
+        public Row(IList<Field> cells)
+        {
+            Cells = cells;
+        }
 
+        public IList<Field> Cells { get; set; }
+    }
 }

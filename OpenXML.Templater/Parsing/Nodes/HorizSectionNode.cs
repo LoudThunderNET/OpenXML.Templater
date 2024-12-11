@@ -3,10 +3,12 @@ using OpenXML.Templater.Rederer;
 
 namespace OpenXML.Templater.Parsing.Nodes
 {
-    public class HorizSectionNode : SyntaxNode
+    public class HorizSectionNode : SyntaxNode, IHasEnd
     {
         public HorizSectionNode(HorizSectionLexeme content) : base(content)
         { }
+
+        public EndSectionLexeme End { get; set; }
 
         public override void Accept(IRenderVisitor renderVisitor)
         {

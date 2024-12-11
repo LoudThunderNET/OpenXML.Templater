@@ -10,11 +10,11 @@ namespace OpenXML.Xlsx.Templater.Tests
         {
             var table = new Table();
 
-            Assert.DoesNotThrow(() => table["Column1", 0] = "Value1");
-            Assert.That(table.Columns.Count, Is.EqualTo(1));
-            Assert.That(table.Columns.First().Name, Is.EqualTo("Column1"));
-            Assert.That(table.Columns.First().Rows[0], Is.EqualTo("Value1"));
-            Assert.That(table["Column1",0], Is.EqualTo("Value1"));
+            Assert.DoesNotThrow(() => table[0, "Column1"] = "Value1");
+            Assert.That(table.Rows.Count, Is.EqualTo(1));
+            Assert.That(table.Rows.First().Cells[0].Name, Is.EqualTo("Column1"));
+            Assert.That(table.Rows.First().Cells[0], Is.EqualTo("Value1"));
+            Assert.That(table[0, "Column1"], Is.EqualTo("Value1"));
         }
 
         [Test]
@@ -22,21 +22,20 @@ namespace OpenXML.Xlsx.Templater.Tests
         {
             var table = new Table();
 
-            Assert.DoesNotThrow(() => table.SetCellValue("Column1", "Header1", 2, "Value2") );
-            Assert.DoesNotThrow(() => table["Column1", 1]= "Value1" );
-            Assert.DoesNotThrow(() => table["Column1", 0] = "Value0");
-            Assert.That(table.Columns.Count, Is.EqualTo(1));
-            Assert.That(table.Columns.First().Name, Is.EqualTo("Column1"));
-            Assert.That(table.Columns.First().Header, Is.EqualTo("Header1"));
+            Assert.DoesNotThrow(() => table.SetCellValue(2, "Column1", "Value2"));
+            Assert.DoesNotThrow(() => table[1, "Column1"]= "Value1" );
+            Assert.DoesNotThrow(() => table[0, "Column1"] = "Value0");
+            Assert.That(table.Rows.Count, Is.EqualTo(1));
+            Assert.That(table.Rows[0].Cells[0].Name, Is.EqualTo("Column1"));
 
-            Assert.That(table.Columns.First().Rows[0], Is.EqualTo("Value0"));
-            Assert.That(table["Column1",0], Is.EqualTo("Value0"));
+            Assert.That(table.Rows.First().Cells[0], Is.EqualTo("Value0"));
+            Assert.That(table[0, "Column1"], Is.EqualTo("Value0"));
 
-            Assert.That(table.Columns.First().Rows[1], Is.EqualTo("Value1"));
-            Assert.That(table["Column1",1], Is.EqualTo("Value1"));
+            Assert.That(table.Rows.First().Cells[1], Is.EqualTo("Value1"));
+            Assert.That(table[1, "Column1"], Is.EqualTo("Value1"));
 
-            Assert.That(table.Columns.First().Rows[2], Is.EqualTo("Value2"));
-            Assert.That(table["Column1",2], Is.EqualTo("Value2"));
+            Assert.That(table.Rows.First().Cells[2], Is.EqualTo("Value2"));
+            Assert.That(table[2, "Column1"], Is.EqualTo("Value2"));
         }
     }
 }

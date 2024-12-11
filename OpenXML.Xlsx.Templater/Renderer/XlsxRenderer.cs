@@ -74,14 +74,24 @@ namespace OpenXML.Xlsx.Templater.Renderer
         {
             if(!ValidateNode<XlsxSectionLexeme>(node, out var sectionlexem, out var content))
                 return;
+
+            if (node.End is not XlsxEndSectionLexeme endSectionLexeme)
+                return;
+
             _sectionStack.Push(node);
-            RenderSection(sectionlexem, content);
+            RenderSection(sectionlexem, content, endSectionLexeme.Cell!);
             _sectionStack.Pop();
         }
 
-        private void RenderSection(XlsxSectionLexeme sectionlexem, string content)
+        private void RenderSection(XlsxSectionLexeme sectionlexem, string content, ICell endCell)
         {
             var table = _dataModel.Tables.FirstOrDefault(t => t.Name == content);
+            if (table == null)
+                return;
+            var startRowIndex = sectionlexem.Cell!.RowIndex;
+            var startColIndex = sectionlexem.Cell!.ColumnIndex;
+            var endRowIndex = endCell.RowIndex;
+            var endColIndex = endCell.ColumnIndex;
         }
 
         public void Visit(TextNode node)
@@ -127,7 +137,6 @@ namespace OpenXML.Xlsx.Templater.Renderer
             where TLexeme : Lexem, IXlsxLexem
         {
             content = null!;
-            lexem = null!;
             if (!ValidateType<TLexeme>(node, out lexem))
             {
                 return false;

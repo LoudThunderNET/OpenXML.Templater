@@ -6,6 +6,9 @@ using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
 using OpenXML.Xlsx.Templater;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using Table = OpenXML.Xlsx.Templater.Table;
 
 //IWorkbook wb = new XSSFWorkbook();
@@ -46,36 +49,57 @@ using Table = OpenXML.Xlsx.Templater.Table;
 
 var templater = new XlsxTemplater();
 templater.Render("XlsTemplates\\StaticTextOnly.xlsx", null!, "StaticTextOnly_Result.xlsx");
-templater.Render("XlsTemplates\\StaticTextInline.xlsx", new DataModel 
+var onlySingleFields = new DataModel
 {
-    SingleFileds = 
+    SingleFileds =
     [
         new Field("date",DateTime.Now.ToString("dd.MMMM.yyyy")),
         new Field("total_quantity", 45652.ToString()),
         new Field("totalsum",546546548.ToString())
     ]
-}, "StaticTextInline_Result.xlsx");
+};
+
+templater.Render(
+    "XlsTemplates\\StaticTextInline.xlsx",
+    onlySingleFields,
+    "StaticTextInline_Result.xlsx");
 
 var rnd = new Random();
-Table items = new Table();
-items.Name = "items";
+Table tables = new();
+tables.Name = "items";
 for (var i = 1; i <= 10; i++)
 {
-    items["id", i] = i.ToString();
-    items["name", i] = "name"+i.ToString();
     var quantity = rnd.Next(1, 10);
     var price = rnd.NextDecimal() * 100;
-    items["quantity", i] = quantity.ToString();
-    items["price", i] = price.ToString("N");
-    items["sum", i] = Math.Round(price*quantity, 2).ToString("N");
+    List<Field> cells = 
+    [
+        new Field("id",i.ToString()),
+        new Field("name","name"+i.ToString()),
+        new Field("quantity",quantity.ToString()),
+        new Field("price",price.ToString("N")),
+        new Field("sum",Math.Round(price*quantity, 2).ToString("N")),
+    ];
+    tables.Rows.Add(new Row(cells));
 }
-templater.Render("XlsTemplates\\StaticTextInlineSection.xlsx", new DataModel 
+var dataModel = new DataModel
 {
-    SingleFileds = 
+    SingleFileds =
     [
         new Field("date",DateTime.Now.ToString("dd.MMMM.yyyy")),
         new Field("total_quantity", 45652.ToString()),
         new Field("totalsum",546546548.ToString())
     ],
-    Tables = [items]
-}, "StaticTextInlineSection_Result.xlsx");
+    Tables = [tables]
+};
+
+File.WriteAllBytes(
+    "TableDataModel", 
+    JsonSerializer.SerializeToUtf8Bytes(dataModel, new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    }));
+
+templater.Render(
+    "XlsTemplates\\StaticTextInlineSection.xlsx",
+    dataModel,
+    "StaticTextInlineSection_Result.xlsx");
