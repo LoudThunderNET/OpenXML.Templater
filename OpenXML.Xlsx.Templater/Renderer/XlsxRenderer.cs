@@ -1,11 +1,9 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using NPOI.SS.UserModel;
+﻿using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
 using OpenXML.Templater.Lexing;
 using OpenXML.Templater.Parsing.Nodes;
 using OpenXML.Templater.Rederer;
-using OpenXML.Xlsx.Templater.Exceptions;
 using OpenXML.Xlsx.Templater.Lexemes;
 using System.Diagnostics.CodeAnalysis;
 
@@ -21,6 +19,7 @@ namespace OpenXML.Xlsx.Templater.Renderer
         private readonly DataModel _dataModel;
         private readonly List<string> _warrnigs;
         private readonly Stack<SectionNode> _sectionStack;
+        private readonly IDataModelContext _dataModelContext;
 
         /// <summary>
         /// Смещение строки в целевом листе, относительно исходного листа.
@@ -38,6 +37,7 @@ namespace OpenXML.Xlsx.Templater.Renderer
             _dataModel = dataModel;
             _warrnigs = [];
             _sectionStack = new Stack<SectionNode>();
+            _dataModelContext = new DataModelContext(dataModel);
         }
 
         public void Visit(HorizSectionNode node)
@@ -49,10 +49,11 @@ namespace OpenXML.Xlsx.Templater.Renderer
         {
             ArgumentNullException.ThrowIfNull(node);
 
-            if (!ValidateInlineNode(node, out var inline, out var field))
+            if (!ValidateInlineNode(node, out var inline, out var value))
                 return;
 
-            RenderCell(inline.Cell!, field.Value);
+            RenderCell(inline.Cell!, value);
+            return;
         }
 
         public void Visit(InvertedSectionNode node)
@@ -76,22 +77,40 @@ namespace OpenXML.Xlsx.Templater.Renderer
                 return;
 
             if (node.End is not XlsxEndSectionLexeme endSectionLexeme)
+            {
+                _warrnigs.Add($"{node.Lexem.Content.ToString} не является типом {typeof(XlsxEndSectionLexeme)}");
                 return;
+            }
 
             _sectionStack.Push(node);
-            RenderSection(sectionlexem, content, endSectionLexeme.Cell!);
+            RenderSection(node, sectionlexem, content, endSectionLexeme.Cell!);
             _sectionStack.Pop();
         }
 
-        private void RenderSection(XlsxSectionLexeme sectionlexem, string content, ICell endCell)
+        private void RenderSection(SectionNode sectionNode, XlsxSectionLexeme sectionlexem, string content, ICell endCell)
         {
             var table = _dataModel.Tables.FirstOrDefault(t => t.Name == content);
             if (table == null)
                 return;
+            _dataModelContext.SetContext(table);
+
             var startRowIndex = sectionlexem.Cell!.RowIndex;
-            var startColIndex = sectionlexem.Cell!.ColumnIndex;
+            var startColIndex = sectionlexem.Cell.ColumnIndex;
             var endRowIndex = endCell.RowIndex;
+            var deltaRow = endRowIndex - startRowIndex+1;
             var endColIndex = endCell.ColumnIndex;
+            for (var rowIndex = 0; rowIndex < table.Rows.Count; rowIndex++)
+            {
+                _dataModelContext.SetContext(table.Rows[rowIndex]);
+                foreach (var child in sectionNode.Children)
+                {
+                    child.Accept(this);
+                }
+                if(rowIndex < table.Rows.Count-1)
+                    _rowOffset += deltaRow;
+                _dataModelContext.RestoreContext();
+            }
+            _dataModelContext.RestoreContext();
         }
 
         public void Visit(TextNode node)
@@ -171,17 +190,17 @@ namespace OpenXML.Xlsx.Templater.Renderer
         private bool ValidateInlineNode(
             InlineNode node,
             [MaybeNullWhen(false)] out XlsxInlineLexeme lexem,
-            [MaybeNullWhen(false)] out Field field)
+            [MaybeNullWhen(false)] out string value)
         {
-            field = null;
+            value = null;
             if (!ValidateNode(node, out lexem, out var content))
             {
                 return false;
             }
 
 
-            field = _dataModel.SingleFileds.FirstOrDefault(f => f.Name == content);
-            if (field == null)
+            value = _dataModelContext.GetValue(content);
+            if (value == null)
             {
                 _warrnigs.Add($"DataModel does not contains field of name '{content}' and will be skiped to render");
                 return false;

@@ -21,6 +21,9 @@
     <None Update="XlsTemplates\StaticTextInline.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="XlsTemplates\StaticTextInlineSection.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="XlsTemplates\StaticTextOnly.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -9,7 +9,7 @@ namespace OpenXML.Xlsx.Templater.Tests
         public void WhenTableEmptyIndexerRow0()
         {
             var table = new Table();
-
+            
             Assert.DoesNotThrow(() => table[0, "Column1"] = "Value1");
             Assert.That(table.Rows.Count, Is.EqualTo(1));
             Assert.That(table.Rows.First().Cells[0].Name, Is.EqualTo("Column1"));

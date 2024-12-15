@@ -1,4 +1,5 @@
-﻿using OpenXML.Xlsx.Templater.Exceptions;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using OpenXML.Xlsx.Templater.Exceptions;
 
 namespace OpenXML.Xlsx.Templater
 {
@@ -76,10 +77,37 @@ namespace OpenXML.Xlsx.Templater
 
             cell.Value = value;
         }
+
+        public Row CreateRow()
+        {
+            var row = new Row(BuildCells());
+            _rows.Add(row);
+
+            return row;
+        }
+
+        private Field[] BuildCells()
+        {
+            var colCount = ColumnCount();
+            if (colCount > 0)
+            {
+                var cells = new Field[colCount];
+                for (var i = 0; i < _rows[0].Cells.Count; i++)
+                    cells[i].Name = _rows[0].Cells[i].Name;
+                return cells;
+            }
+
+            return [];
+        }
+
+        private int ColumnCount() => 
+            _rows.Count == 0 ? 0 
+            : _rows[0].Cells.Count;
     }
 
     public record Row
     {
+
         public Row()
         { 
             Cells = [];
