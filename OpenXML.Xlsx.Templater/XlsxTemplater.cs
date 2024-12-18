@@ -1,14 +1,16 @@
 ﻿using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using OpenXML.Templater;
+using OpenXML.Templater.Exceptions;
 using OpenXML.Templater.Lexing;
 using OpenXML.Templater.Parsing;
 using OpenXML.Templater.Syntaxing;
-using OpenXML.Xlsx.Templater.Exceptions;
+using OpenXML.Templater.Templater;
 using OpenXML.Xlsx.Templater.Lexemes;
 using OpenXML.Xlsx.Templater.Renderer;
 namespace OpenXML.Xlsx.Templater
 {
-    public class XlsxTemplater
+    public class XlsxTemplater : ITemplater
     {
         public void Render(string templateFileName, DataModel dataModel, string outpurFileName)
         {
@@ -18,7 +20,7 @@ namespace OpenXML.Xlsx.Templater
             ISheet sheet = template.GetSheetAt(0);
             if (sheet == null)
             {
-                XlsxTemplateException.Throw("В файле шаблона нет книги");
+                TemplaterException.Throw("В файле шаблона нет книги");
                 return;
             }
 
@@ -38,14 +40,14 @@ namespace OpenXML.Xlsx.Templater
                 }))
                 .ToList();
             if (wrongLexemsExist)
-                XlsxTemplateException
+                TemplaterException
                     .Throw("Ошибка разбора шаблона: есть лексемы тличные от типа "+typeof(IXlsxLexem).FullName);
 
             var syntax = new Syntax();
             var (isValid, lexem, syntaxError) = syntax.Verify(lexemes);
             if (!isValid && lexem != null)
             {
-                XlsxTemplateException
+                TemplaterException
                     .Throw("Синтаксическая ошибка в ячейке " + ((IXlsxLexem)lexem).Cell!.Address + ": " + syntaxError);
             }
             var parser = new Parser();

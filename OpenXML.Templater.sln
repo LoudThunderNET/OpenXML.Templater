@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenXML.Xlsx.Templater.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPOI.Experiments", "Experiments\NPOI.Experiments\NPOI.Experiments.csproj", "{928C29BF-307B-4ADC-8016-23753BF16F80}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenXML.Docx.Templater", "OpenXML.Word.Templater\OpenXML.Docx.Templater.csproj", "{F5DB9E5F-881F-40D4-8F43-D71E95C789E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{928C29BF-307B-4ADC-8016-23753BF16F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{928C29BF-307B-4ADC-8016-23753BF16F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{928C29BF-307B-4ADC-8016-23753BF16F80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5DB9E5F-881F-40D4-8F43-D71E95C789E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5DB9E5F-881F-40D4-8F43-D71E95C789E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5DB9E5F-881F-40D4-8F43-D71E95C789E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5DB9E5F-881F-40D4-8F43-D71E95C789E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

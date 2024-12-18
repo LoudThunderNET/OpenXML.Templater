@@ -1,7 +1,6 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using OpenXML.Xlsx.Templater.Exceptions;
+﻿using OpenXML.Templater.Exceptions;
 
-namespace OpenXML.Xlsx.Templater
+namespace OpenXML.Templater
 {
     public class DataModel
     {
@@ -55,7 +54,7 @@ namespace OpenXML.Xlsx.Templater
 
             var cell = _rows[rowIndex].Cells.FirstOrDefault(f => f.Name == columnName);
             if (cell == null)
-                XlsxTemplateException
+                TemplaterException
                     .Throw($"Столбец {columnName} не найден.");
 
             return cell.Value;
@@ -64,7 +63,7 @@ namespace OpenXML.Xlsx.Templater
         private void ValidateRowIndex(int rowIndex)
         {
             if (rowIndex < 0 || rowIndex >= _rows.Count)
-                XlsxTemplateException
+                TemplaterException
                     .Throw($"Индекс {rowIndex} выходит за пределы диапазона [0..{_rows.Count - 1}].");
         }
 
@@ -73,7 +72,7 @@ namespace OpenXML.Xlsx.Templater
             ValidateRowIndex(rowIndex);
             var cell = _rows[rowIndex].Cells.FirstOrDefault(f => f.Name == columnName);
             if (cell == null)
-                XlsxTemplateException.Throw($"Столбец {columnName} не найден.");
+                TemplaterException.Throw($"Столбец {columnName} не найден.");
 
             cell.Value = value;
         }

@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace OpenXML.Xlsx.Templater
+namespace OpenXML.Templater
 {
     public interface IDataContext<TDataModel>
         where TDataModel : class

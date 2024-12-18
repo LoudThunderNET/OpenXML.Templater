@@ -1,6 +1,7 @@
 ﻿using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
+using OpenXML.Templater;
 using OpenXML.Templater.Lexing;
 using OpenXML.Templater.Parsing.Nodes;
 using OpenXML.Templater.Rederer;
@@ -40,11 +41,13 @@ namespace OpenXML.Xlsx.Templater.Renderer
             _dataModelContext = new DataModelContext(dataModel);
         }
 
+        /// <inheritdoc/>
         public void Visit(HorizSectionNode node)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public void Visit(InlineNode node)
         {
             ArgumentNullException.ThrowIfNull(node);
@@ -56,11 +59,13 @@ namespace OpenXML.Xlsx.Templater.Renderer
             return;
         }
 
+        /// <inheritdoc/>
         public void Visit(InvertedSectionNode node)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public void Visit(RootNode node)
         {
             foreach (var child in node.Children)
@@ -71,6 +76,7 @@ namespace OpenXML.Xlsx.Templater.Renderer
             _fileStream.Close();
         }
 
+        /// <inheritdoc/>
         public void Visit(SectionNode node)
         {
             if(!ValidateNode<XlsxSectionLexeme>(node, out var sectionlexem, out var content))
@@ -143,6 +149,7 @@ namespace OpenXML.Xlsx.Templater.Renderer
             }
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             Dispose(disposing: true);

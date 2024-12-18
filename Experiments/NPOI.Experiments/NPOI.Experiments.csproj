@@ -18,6 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="WordTemplates\StaticTextInlineVSection.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="XlsTemplates\StaticTextInline.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
