@@ -3,16 +3,14 @@ using OpenXML.Templater.Rederer;
 
 namespace OpenXML.Templater.Parsing.Nodes
 {
-    public class HorizSectionNode : SyntaxNode, IHasEnd
+    public class HorizSectionNode(HorizSectionLexeme content) : 
+        SyntaxNode(content), IHasEnd
     {
-        public HorizSectionNode(HorizSectionLexeme content) : base(content)
-        { }
-
         public EndSectionLexeme End { get; set; }
 
-        public override void Accept(IRenderVisitor renderVisitor)
+        public override void Accept(IRender renderVisitor)
         {
-            renderVisitor.Visit(this);
+            renderVisitor.Render(this);
         }
     }
 }

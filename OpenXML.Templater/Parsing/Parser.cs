@@ -3,6 +3,9 @@ using OpenXML.Templater.Parsing.Nodes;
 
 namespace OpenXML.Templater.Parsing
 {
+    /// <summary>
+    /// Парсер абстрактного синтаксического дерева (АСД).
+    /// </summary>
     public class Parser
     {
         private readonly SyntaxNode _root;
@@ -15,6 +18,9 @@ namespace OpenXML.Templater.Parsing
             _prevNode = new Stack<SyntaxNode>();
         }
 
+        /// <summary>
+        /// Корень АСД.
+        /// </summary>
         public SyntaxNode Root => _root;
 
         public void Parse(IEnumerable<Lexem> lexemes)

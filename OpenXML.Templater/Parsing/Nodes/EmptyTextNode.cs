@@ -6,9 +6,9 @@ namespace OpenXML.Templater.Parsing.Nodes
 {
     public class EmptyNode(Lexem lexem) : SyntaxNode(lexem)
     {
-        public override void Accept(IRenderVisitor renderVisitor)
+        public override void Accept(IRender renderer)
         {
-            renderVisitor.Visit(this);
+            renderer.Render(this);
         }
     }
 }

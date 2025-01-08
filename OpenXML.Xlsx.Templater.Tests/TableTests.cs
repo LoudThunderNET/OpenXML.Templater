@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Table = OpenXML.Templater.Table;
 
 namespace OpenXML.Xlsx.Templater.Tests
 {

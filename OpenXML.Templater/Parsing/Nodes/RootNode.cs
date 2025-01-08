@@ -1,12 +1,13 @@
 ﻿using OpenXML.Templater.Rederer;
+using System.Reflection;
 
 namespace OpenXML.Templater.Parsing.Nodes
 {
     public class RootNode : SyntaxNode
     {
-        public override void Accept(IRenderVisitor renderVisitor)
+        public override void Accept(IRender renderer)
         {
-            renderVisitor.Visit(this);
+            renderer.Render(this);
         }
     }
 }

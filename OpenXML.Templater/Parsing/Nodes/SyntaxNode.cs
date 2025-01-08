@@ -26,6 +26,6 @@ namespace OpenXML.Templater.Parsing.Nodes
 
         public ICollection<SyntaxNode> Children { get; }
 
-        public abstract void Accept(IRenderVisitor renderVisitor);
+        public abstract void Accept(IRender renderVisitor);
     }
 }

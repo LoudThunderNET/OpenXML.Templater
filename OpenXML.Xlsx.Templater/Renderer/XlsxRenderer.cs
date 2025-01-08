@@ -2,6 +2,7 @@
 using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
 using OpenXML.Templater;
+using OpenXML.Templater.Extensions;
 using OpenXML.Templater.Lexing;
 using OpenXML.Templater.Parsing.Nodes;
 using OpenXML.Templater.Rederer;
@@ -10,16 +11,16 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OpenXML.Xlsx.Templater.Renderer
 {
-    public class XlsxRenderer : IRenderVisitor, IDisposable
+    public class XlsxRenderer : IRender, IDisposable
     {
         private bool _disposedValue;
         private readonly FileStream _fileStream;
-        private readonly ISheet _templateSheet;
         private readonly XSSFWorkbook _targetWorkbook;
         private readonly ISheet _targetSheet;
         private readonly DataModel _dataModel;
         private readonly List<string> _warrnigs;
         private readonly Stack<SectionNode> _sectionStack;
+        private readonly Stack<InvertedSectionNode> _invSectionStack;
         private readonly IDataModelContext _dataModelContext;
 
         /// <summary>
@@ -34,21 +35,21 @@ namespace OpenXML.Xlsx.Templater.Renderer
             _fileStream = new FileStream(outputFilename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             _targetWorkbook = new XSSFWorkbook();
             _targetSheet = _targetWorkbook.CreateSheet(templateSheet.SheetName);
-            _templateSheet = templateSheet;
             _dataModel = dataModel;
             _warrnigs = [];
             _sectionStack = new Stack<SectionNode>();
+            _invSectionStack = new Stack<InvertedSectionNode>();
             _dataModelContext = new DataModelContext(dataModel);
         }
 
         /// <inheritdoc/>
-        public void Visit(HorizSectionNode node)
+        public void Render(HorizSectionNode node)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public void Visit(InlineNode node)
+        public void Render(InlineNode node)
         {
             ArgumentNullException.ThrowIfNull(node);
 
@@ -60,13 +61,51 @@ namespace OpenXML.Xlsx.Templater.Renderer
         }
 
         /// <inheritdoc/>
-        public void Visit(InvertedSectionNode node)
+        public void Render(InvertedSectionNode node)
         {
-            throw new NotImplementedException();
+            if (!ValidateNode<XlsxInvertedSectionLexeme>(node, out var invSectionlexem, out var content))
+                return;
+
+            if (node.End is not XlsxEndSectionLexeme endSectionLexeme)
+            {
+                _warrnigs.Add($"{node.Lexem.Content.ToString} не является типом {typeof(XlsxEndSectionLexeme)}");
+                return;
+            }
+            _invSectionStack.Push(node);
+            RenderInvSection(node, invSectionlexem, content, endSectionLexeme.Cell!);
+            _invSectionStack.Pop();
+
+        }
+
+        private void RenderInvSection(InvertedSectionNode invSectionNode, XlsxInvertedSectionLexeme invSectionlexem, string content, ICell endCell)
+        {
+            var table = _dataModel.Tables.FirstOrDefault(t => t.Name == content);
+            if (table == null || table.Rows.IsEmpty())
+                return;
+
+            _dataModelContext.SetContext(table);
+
+            var startRowIndex = invSectionlexem.Cell!.RowIndex;
+            var startColIndex = invSectionlexem.Cell.ColumnIndex;
+            var endRowIndex = endCell.RowIndex;
+            var deltaRow = endRowIndex - startRowIndex + 1;
+            var endColIndex = endCell.ColumnIndex;
+            for (var rowIndex = 0; rowIndex < table.Rows.Count; rowIndex++)
+            {
+                _dataModelContext.SetContext(table.Rows[rowIndex]);
+                foreach (var child in invSectionNode.Children)
+                {
+                    child.Accept(this);
+                }
+                if (rowIndex < table.Rows.Count - 1)
+                    _rowOffset += deltaRow;
+                _dataModelContext.RestoreContext();
+            }
+            _dataModelContext.RestoreContext();
         }
 
         /// <inheritdoc/>
-        public void Visit(RootNode node)
+        public void Render(RootNode node)
         {
             foreach (var child in node.Children)
             {
@@ -77,7 +116,7 @@ namespace OpenXML.Xlsx.Templater.Renderer
         }
 
         /// <inheritdoc/>
-        public void Visit(SectionNode node)
+        public void Render(SectionNode node)
         {
             if(!ValidateNode<XlsxSectionLexeme>(node, out var sectionlexem, out var content))
                 return;
@@ -119,7 +158,7 @@ namespace OpenXML.Xlsx.Templater.Renderer
             _dataModelContext.RestoreContext();
         }
 
-        public void Visit(TextNode node)
+        public void Render(TextNode node)
         {
             if (!ValidateNode<XlsxTextLexeme>(node, out var textLexem, out var content))
                 return;
@@ -128,9 +167,9 @@ namespace OpenXML.Xlsx.Templater.Renderer
         }
 
         /// <inheritdoc/>
-        public void Visit(EmptyNode node)
+        public void Render(EmptyNode node)
         {
-            if (!ValidateType<XlsxEmptyLexem>(node, out var emptyLexem))
+            if (!ValidateLexemeType<XlsxEmptyLexem>(node, out var emptyLexem))
                 return;
 
             RenderCell(emptyLexem.Cell!, string.Empty);
@@ -144,7 +183,6 @@ namespace OpenXML.Xlsx.Templater.Renderer
                 {
                     _fileStream.Dispose();
                 }
-
                 _disposedValue = true;
             }
         }
@@ -162,8 +200,8 @@ namespace OpenXML.Xlsx.Templater.Renderer
             [NotNullWhen(true)] out string content)
             where TLexeme : Lexem, IXlsxLexem
         {
-            content = null!;
-            if (!ValidateType<TLexeme>(node, out lexem))
+            content = string.Empty;
+            if (!ValidateLexemeType<TLexeme>(node, out lexem))
             {
                 return false;
             }
@@ -171,26 +209,25 @@ namespace OpenXML.Xlsx.Templater.Renderer
             content = lexem.Content.ToString();
             if (lexem.Cell == null)
             {
-                _warrnigs.Add($"Cell property of inlineNode with value {content} is null");
-                content = null!;
+                _warrnigs.Add($"У узла {node.GetType().Name}, со значением {content} свойство Cell равно null.");
                 return false;
             }
 
             return true;
         }
 
-        private bool ValidateType<TLexeme>(SyntaxNode node,
+        private bool ValidateLexemeType<TLexeme>(SyntaxNode node,
             [NotNullWhen(true)] out TLexeme lexem)
              where TLexeme : Lexem, IXlsxLexem
         {
             lexem = null!;
             if (node.Lexem is not TLexeme _lexem)
             {
-                _warrnigs.Add($"Expected type of the node.Lexem is {typeof(TLexeme)} but meet {node.Lexem?.GetType().Name}");
+                _warrnigs.Add($"Ожидаемый тип node.Lexem is {typeof(TLexeme)}, однако является {node.Lexem?.GetType().Name}");
                 return false;
             }
-
             lexem = _lexem;
+
             return true;
         }
 
@@ -246,6 +283,7 @@ namespace OpenXML.Xlsx.Templater.Renderer
                 var leftTopeMergeCell = _targetSheet.GetRow(targetMergeRange.FirstRow)
                     .GetCell(targetMergeRange.FirstColumn);
                 leftTopeMergeCell.SetCellValue(value);
+
                 return;
             }
             

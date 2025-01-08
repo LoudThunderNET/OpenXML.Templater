@@ -10,37 +10,23 @@ namespace OpenXML.Templater
         EnumerableState MoveNext();
     }
 
-    public interface ContextSetter<TData>
+    public interface IContextSetter<TData>
     { 
         void SetContext(TData value);
     }
 
-    public readonly struct EnumerableState
+    public readonly struct EnumerableState(bool isFirst, int index, bool isLast)
     {
-        public readonly bool IsFirst;
-        public readonly int Index;
-        public readonly bool IsLast;
-
-        public EnumerableState(bool isFirst, int index, bool isLast)
-        {
-            IsFirst = isFirst;
-            Index = index;
-            IsLast = isLast;
-        }
+        public readonly bool IsFirst = isFirst;
+        public readonly int Index = index;
+        public readonly bool IsLast = isLast;
     }
 
-    public class EnumeratorState : IEnumerator
+    public class EnumeratorState(int index, int count, IEnumerator enumerator) : IEnumerator
     { 
-        public int Index;
-        public int Count;
-        private IEnumerator _enumerator;
-
-        public EnumeratorState(int index, int count, IEnumerator enumerator)
-        {
-            Index = index;
-            Count = count;
-            _enumerator = enumerator;
-        }
+        public int Index = index;
+        public int Count = count;
+        private readonly IEnumerator _enumerator = enumerator;
 
         public object Current => _enumerator.Current;
 
@@ -57,47 +43,33 @@ namespace OpenXML.Templater
     }
 
     public interface IDataModelContext : IDataContext<DataModel>,
-        ContextSetter<Table>,
-        ContextSetter<Row>
+        IContextSetter<Table>,
+        IContextSetter<Row>
     { 
     }
 
-    public class DataModelContext : IDataModelContext
+    public class DataModelContext(DataModel dataModel) : IDataModelContext
     {
-        private object? _current;
-        private static EnumeratorState EmptyEnumerator = new EnumeratorState(-1, 0, Array.Empty<string>().GetEnumerator());
-        private EnumeratorState _currentEnumerator;
-        private Stack<object> _contextStack;
-        private Stack<EnumeratorState> _enumeratorStack;
+        private object? _current = dataModel;
+        private readonly static EnumeratorState EmptyEnumerator = new(-1, 0, Array.Empty<string>().GetEnumerator());
+        private EnumeratorState _currentEnumerator = EmptyEnumerator;
+        private readonly Stack<object> _contextStack = new();
+        private readonly Stack<EnumeratorState> _enumeratorStack = new();
         private int _enumerableIndex = -1;
         private int _enumerableCount = -1;
 
-        public DataModelContext(DataModel dataModel)
-        {
-            _current = dataModel;
-            _contextStack = new Stack<object>();
-            _enumeratorStack = new Stack<EnumeratorState>();
-            _currentEnumerator = EmptyEnumerator;
-        }
-
-        public string GetValue(string fieldName)
-        {
-            switch (_current)
+        public string GetValue(string fieldName) =>
+            _current switch
             {
-                case DataModel dataModel:
-                    return dataModel.SingleFileds
-                        .FirstOrDefault(f => EqualsInvariantCultureIgnoreCase(f.Name, fieldName))?.Value 
-                        ?? string.Empty;
-                case Table table:
-                    return string.Empty;
+                DataModel dataModel => dataModel.SingleFileds
+                                        .FirstOrDefault(f => EqualsInvariantCultureIgnoreCase(f.Name, fieldName))?.Value
+                                        ?? string.Empty,
+                Table table => string.Empty,
+                Row row => row.Cells.FirstOrDefault(c => EqualsInvariantCultureIgnoreCase(c.Name, fieldName))?.Value
+                                        ?? string.Empty,
+                _ => string.Empty,
+            };
 
-                case Row row:
-                    return row.Cells.FirstOrDefault(c=> EqualsInvariantCultureIgnoreCase(c.Name, fieldName))?.Value 
-                        ?? string.Empty;
-                default:
-                    return string.Empty;
-            }
-        }
 
         public EnumerableState MoveNext()
         {
@@ -119,7 +91,7 @@ namespace OpenXML.Templater
             if (_contextStack.Count > 0)
             {
                 _current = _contextStack.Pop();
-                if (_current is IEnumerable enumerable)
+                if (_current is IEnumerable)
                 {
                     _currentEnumerator = _enumeratorStack.Pop();
                 }

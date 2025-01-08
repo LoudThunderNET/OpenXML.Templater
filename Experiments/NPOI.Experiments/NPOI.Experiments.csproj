@@ -13,12 +13,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\OpenXML.Docx.Templater\OpenXML.Docx.Templater.csproj" />
     <ProjectReference Include="..\..\OpenXML.Templater\OpenXML.Templater.csproj" />
     <ProjectReference Include="..\..\OpenXML.Xlsx.Templater\OpenXML.Xlsx.Templater.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="WordTemplates\StaticTextInlineVSection.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WordTemplates\StaticTextOnly.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="XlsTemplates\StaticTextInline.xlsx">

@@ -1,19 +1,17 @@
 ﻿using OpenXML.Templater.Lexing;
 using OpenXML.Templater.Rederer;
+using System.Reflection;
 
 namespace OpenXML.Templater.Parsing.Nodes
 {
-    public class InvertedSectionNode : SyntaxNode, IHasEnd
+    public class InvertedSectionNode(InvertedSectionLexeme content) : 
+        SyntaxNode(content), IHasEnd
     {
-        public InvertedSectionNode(InvertedSectionLexeme content) :base(content)
-        { 
-        }
-
         public EndSectionLexeme End { get; set; }
 
-        public override void Accept(IRenderVisitor renderVisitor)
+        public override void Accept(IRender renderer)
         {
-            renderVisitor.Visit(this);
+            renderer.Render(this);
         }
     }
 }

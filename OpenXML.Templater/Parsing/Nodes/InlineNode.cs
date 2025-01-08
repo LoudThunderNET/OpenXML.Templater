@@ -3,15 +3,11 @@ using OpenXML.Templater.Rederer;
 
 namespace OpenXML.Templater.Parsing.Nodes
 {
-    public class InlineNode : SyntaxNode
+    public class InlineNode(InlineLexeme content) : SyntaxNode(content)
     {
-        public InlineNode(InlineLexeme content) : base(content)
-        { 
-        }
-
-        public override void Accept(IRenderVisitor renderVisitor)
+        public override void Accept(IRender renderer)
         {
-            renderVisitor.Visit(this);
+            renderer.Render(this);
         }
     }
 }

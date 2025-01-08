@@ -16,3 +16,9 @@
 /OpenXML.Xlsx.Templater.Tests/bin/
 /OpenXML.Xlsx.Templater.Tests/obj/
 
+/OpenXML.Word.Templater/bin
+/OpenXML.Word.Templater/obj
+/Experiments/Word/bin/Debug/net8.0
+/Experiments/Word/obj
+/OpenXML.Docx.Templater/bin/Debug/net8.0
+/OpenXML.Docx.Templater/obj

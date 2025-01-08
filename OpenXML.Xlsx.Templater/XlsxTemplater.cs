@@ -52,9 +52,8 @@ namespace OpenXML.Xlsx.Templater
             }
             var parser = new Parser();
             parser.Parse(lexemes);
-            var ast = parser.Root;
             var renderer = new XlsxRenderer(sheet, dataModel, outpurFileName);
-            ast.Accept(renderer);
+            parser.Root.Accept(renderer);
         }
     }
 }

@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OpenXML.Templater\OpenXML.Templater.csproj" />
     <ProjectReference Include="..\OpenXML.Xlsx.Templater\OpenXML.Xlsx.Templater.csproj" />
   </ItemGroup>
 

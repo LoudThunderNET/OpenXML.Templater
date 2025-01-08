@@ -1,18 +1,15 @@
 ﻿using OpenXML.Templater.Lexing;
 using OpenXML.Templater.Rederer;
+using System.Reflection;
 
 namespace OpenXML.Templater.Parsing.Nodes
 {
-    public class SectionNode : SyntaxNode, IHasEnd
+    public class SectionNode(SectionLexeme content) : SyntaxNode(content), IHasEnd
     {
-        public SectionNode(SectionLexeme content) : base(content)
-        {
-        }
-
         public EndSectionLexeme End { get; set; }
-        public override void Accept(IRenderVisitor renderVisitor)
+        public override void Accept(IRender renderer)
         {
-            renderVisitor.Visit(this);
+            renderer.Render(this);
         }
     }
 }

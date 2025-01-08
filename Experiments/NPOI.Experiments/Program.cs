@@ -2,6 +2,7 @@
 using MathNet.Numerics.Random;
 using NPOI.XWPF.UserModel;
 using OpenXML.Templater;
+using OpenXML.Docx.Templater;
 using OpenXML.Xlsx.Templater;
 using System.Text.Json;
 using Table = OpenXML.Templater.Table;
@@ -46,6 +47,7 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        /*
         var templater = new XlsxTemplater();
         templater.Render("XlsTemplates\\StaticTextOnly.xlsx", null!, "StaticTextOnly_Result.xlsx");
         var onlySingleFields = new DataModel
@@ -64,8 +66,10 @@ internal class Program
             "StaticTextInline_Result.xlsx");
 
         var rnd = new Random();
-        Table tables = new();
-        tables.Name = "items";
+        Table tables = new()
+        {
+            Name = "items"
+        };
         for (var i = 1; i <= 10; i++)
         {
             var quantity = rnd.Next(1, 10);
@@ -91,20 +95,32 @@ internal class Program
             Tables = [tables]
         };
 
-        File.WriteAllBytes(
-            "TableDataModel",
-            JsonSerializer.SerializeToUtf8Bytes(dataModel, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            }));
-
         templater.Render(
             "XlsTemplates\\StaticTextInlineSection.xlsx",
             dataModel,
             "StaticTextInlineSection_Result.xlsx");
-
-        using var fileStream = new FileStream("WordTemplates\\StaticTextInlineVSection.docx", FileMode.Open, FileAccess.Read);
-        var doc = new XWPFDocument(fileStream);
+        */
+        var dataModel = new DataModel
+        {
+            SingleFileds = 
+            [ 
+                new Field("date", DateTime.Now.ToString("dd.MM.yyyy"))
+            ],
+            Tables = 
+            [
+                new Table
+                {
+                    Name = "tab1",
+                    Rows =
+                [
+                        new Row([new Field("number", "1"), new Field("name","Name1"), new Field("quantity", "2"), new Field("price","4564.45"), new Field("sum", "2342")]),
+                        new Row([new Field("number", "2"), new Field("name","Name2"), new Field("quantity", "4"), new Field("price","74554.45"), new Field("sum", "4564652")])
+                    ]
+                }
+            ]
+        };
+        var docxTemplater = new DocxTemplater();
+        docxTemplater.Render("WordTemplates\\StaticTextOnly.docx", dataModel, "StaticTextOnly_Result.docx");
         Console.WriteLine("Done...");
     }
 }
